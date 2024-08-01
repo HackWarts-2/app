@@ -420,16 +420,16 @@ def scrape_instagram_similar_profiles(query):
   data = []
   for item in apify_client.dataset(actor_run["defaultDatasetId"]).iterate_items():
       data.append({
-          "inputUrl": item.get("inputUrl"),
-          "username": item.get("username"),
-          "followersCount": item.get("followersCount"),
-          "followsCount": item.get("followsCount"),
-          "postsCount": item.get("postsCount"),
-          "externalUrl": item.get("externalUrl"),
-          "biography": item.get("biography"),
-          "profilePicUrl": item.get("profilePicUrl"),
-          "highlightReelCount": item.get("highlightReelCount"),
-          "businessCategoryName": item.get("businessCategoryName")
+          "inputUrl": item.get("inputUrl",'N/A'),
+          "username": item.get("username",'N/A'),
+          "followersCount": item.get("followersCount",0),
+          "followsCount": item.get("followsCount",0),
+          "postsCount": item.get("postsCount",0),
+          "externalUrl": item.get("externalUrl",'N/A'),
+          "biography": item.get("biography",'N/A'),
+          "profilePicUrl": item.get("profilePicUrl",'N/A'),
+          "highlightReelCount": item.get("highlightReelCount",0),
+          "businessCategoryName": item.get("businessCategoryName",'N/A')
       })
 
   data_sorted = sorted(data, key=lambda x: x['followersCount'], reverse=True)
