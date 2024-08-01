@@ -1,8 +1,15 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 def main():
     st.set_page_config(page_title="Similar Profiles", page_icon=":busts_in_silhouette:")
     st.title("Similar Profiles")
+
+
+    # trying out instagram post embed
+    instagram_url = "https://www.instagram.com/p/C-DzhHLNqDz/embed"
+    components.iframe(instagram_url, height=400, width=300)
+
 
     # Example profiles, replace with real data as needed
     profiles = [
