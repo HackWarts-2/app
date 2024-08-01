@@ -29,5 +29,6 @@ def main():
             st.session_state['selected_profile'] = profile
             st.switch_page("pages/3_profile_details.py")
 
+
 if __name__ == "__main__":
     main()

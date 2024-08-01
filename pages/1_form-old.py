@@ -21,5 +21,6 @@ def main():
         else:
             st.error("Please provide both username and search query")
 
+
 if __name__ == "__main__":
     main()
