@@ -5,11 +5,17 @@ def main():
     st.set_page_config(page_title="Similar Profiles", page_icon=":busts_in_silhouette:")
     st.title("Similar Profiles")
 
-
     # trying out instagram post embed
     instagram_url = "https://www.instagram.com/p/C-DzhHLNqDz/embed"
     components.iframe(instagram_url, height=400, width=300)
 
+    # Check if insights are available in session state
+    if 'insights' in st.session_state:
+        insights = st.session_state['insights']
+        st.write("Insights received from the form:")
+        st.json(insights)
+    else:
+        st.write("No insights available. Please go back to the form page and submit your query.")
 
     # Example profiles, replace with real data as needed
     profiles = [
@@ -21,8 +27,7 @@ def main():
     for profile in profiles:
         if st.button(profile['name']):
             st.session_state['selected_profile'] = profile
-            # st.experimental_rerun()  # Refresh the app state to ensure session state is updated
-            st.switch_page("pages/3_profile_details.py")  # This will navigate to the Profile Details page
+            st.switch_page("pages/3_profile_details.py")
 
 if __name__ == "__main__":
     main()
