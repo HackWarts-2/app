@@ -382,3 +382,55 @@ def getInsights(user_data, query):
         users_insights.update(user_insights)
 
     return users_insights
+
+
+def scrape_instagram_similar_profiles(query):
+
+  def getSimilarProfiles(query):
+      searchQuery = query
+      url = "https://www.googleapis.com/customsearch/v1"
+      params  = {
+          "q": searchQuery,
+          "key": google_api_key,
+          "cx": search_engine_id,
+          "num": 5
+      }
+
+      response = requests.get(url, params=params)
+      results = response.json()
+      links_array = [item['link'] for item in results['items']]
+     
+      return links_array # Added return statement to make links_array available outside the function
+
+  apify_client = ApifyClient(apify_api_key)
+  links_array = getSimilarProfiles(query) # Call getSimilarProfiles to get the links
+  
+  run_input = { # Indent this block one level further
+    "addParentData": False,
+    "directUrls":links_array,
+    "enhanceUserSearchWithFacebookPage": False,
+    "isUserReelFeedURL": False,
+    "isUserTaggedFeedURL": False,
+    "resultsType": "details",
+
+  }
+
+  actor_run = apify_client.actor('apify/instagram-scraper').call(run_input=run_input)
+
+  data = []
+  for item in apify_client.dataset(actor_run["defaultDatasetId"]).iterate_items():
+      data.append({
+          "inputUrl": item.get("inputUrl"),
+          "username": item.get("username"),
+          "followersCount": item.get("followersCount"),
+          "followsCount": item.get("followsCount"),
+          "postsCount": item.get("postsCount"),
+          "externalUrl": item.get("externalUrl"),
+          "biography": item.get("biography"),
+          "profilePicUrl": item.get("profilePicUrl"),
+          "highlightReelCount": item.get("highlightReelCount"),
+          "businessCategoryName": item.get("businessCategoryName")
+      })
+
+  data_sorted = sorted(data, key=lambda x: x['followersCount'], reverse=True)
+  return json.dumps(data_sorted)    
