@@ -26,7 +26,7 @@ def userData(username):
   # Fetch and print Actor results from the run's dataset (if there are any)
   for item in client.dataset(run["defaultDatasetId"]).iterate_items():
       data.update(item)
-      print(item)
+      #print(item)
 
     # Function to extract relevant post information
   def extract_post_info(post):
@@ -94,7 +94,7 @@ def userData(username):
   }
 
   # Output the extracted data
-  print(user_data)
+  #print(user_data)
 
   # Extracting required information
   user_info = f"""
@@ -122,14 +122,14 @@ def userData(username):
   
   # Calculate the length of user_info
   user_info_length = len(user_info)
-  print(f"Length of user_info: {user_info_length} characters")
+  #print(f"Length of user_info: {user_info_length} characters")
 
   # Truncate if it's more than 3500 characters
   if user_info_length > 3500:
       user_info = user_info[:3500]
       print("user_info was truncated to 3500 characters.")
 
-  print(user_info)
+  #print(user_info)
 
       # Define the API endpoint
   url = "https://api.ai71.ai/v1/chat/completions"
@@ -252,7 +252,7 @@ def getInsightsForProfile(user_data, profile_url):
         for post_url, post_data in user_posts.items():
             # Define the prompt
             prompt = f"My account info:\n {user_data} \n Instagram post data to analyze:\n {post_data}"
-            print("Prompt for ", post_url, "\n", prompt)
+            #print("Prompt for ", post_url, "\n", prompt)
 
             # API payload
             payload = {
@@ -338,5 +338,5 @@ def scrape_instagram_similar_profiles(query):
       })
 
   data_sorted = sorted(data, key=lambda x: x['followersCount'], reverse=True)
-  print(json.dumps(data_sorted))
+  #print(json.dumps(data_sorted))
   return json.dumps(data_sorted)    

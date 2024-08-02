@@ -4,6 +4,16 @@ import json
 from utils import scrape_instagram_similar_profiles, userData
 import threading
 
+# Initialize the session state keys if they do not exist
+if 'similar_profiles_data' not in st.session_state:
+    st.session_state['similar_profiles_data'] = None
+
+if 'user_data_response' not in st.session_state:
+    st.session_state['user_data_response'] = None
+
+if 'user_data_fetching' not in st.session_state:
+    st.session_state['user_data_fetching'] = False
+
 
 # Categories and subcategories
 categories = {
@@ -232,16 +242,17 @@ def main():
         similar_profiles_data = scrape_instagram_similar_profiles(query_string)
 
         # Save the similar_profiles_data to session state
-        st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)  # Store the data in session state
+        st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)
 
-        # Define a function to run userData and save its result in the session state
-        def fetch_user_data():
-            user_data_response = userData(instagram_username)
-            st.session_state['user_data_response'] = user_data_response
-            print("User Data Response:", user_data_response)
+        # Set the user_data_fetching flag to True
+        st.session_state['user_data_fetching'] = True
 
-        # Run the userData function in a separate thread
-        threading.Thread(target=fetch_user_data).start()
+        # Run the userData function synchronously
+        user_data_response = userData(instagram_username)
+        st.session_state['user_data_response'] = user_data_response
+        st.session_state['user_data_fetching'] = False
+
+        print("User Data Response:", user_data_response)
 
         # Navigate to the similar profiles page
         st.switch_page("pages/2_similar_profiles.py")
