@@ -1,5 +1,9 @@
 import streamlit as st
 import requests
+import json
+from utils import scrape_instagram_similar_profiles, userData
+import threading
+
 
 # Categories and subcategories
 categories = {
@@ -9,8 +13,7 @@ categories = {
     ],
     "Fashion": [
         "Fashion Blogger", "Personal Style", "Street Style", "Luxury Fashion",
-         "Footwear",
-        "Accessories & Jewelry"
+        "Footwear", "Accessories & Jewelry"
     ],
     "Food & Drink": [
         "Food Blogger", "Recipe Sharing", "Food Reviews", "Restaurants & Cafes",
@@ -99,6 +102,14 @@ categories = {
     ]
 }
 
+# Account types
+account_types = [
+    "Personal Account", "Influencer", "Blogger/Content Creator", "Small Business",
+    "Home Business", "Brand/Corporate", "Public Figure/Celebrity", "Artist/Musician/Performer",
+    "Photographer", "Fitness Trainer/Coach",
+    "E-commerce", "Educational Account", "Travel", "Pet Account", "Entertainment", 
+]
+
 def main():
     st.set_page_config(page_title="Form", page_icon=":memo:")
     
@@ -161,12 +172,9 @@ def main():
     instagram_username = st.text_input("Instagram Username (Optional)")
 
     # Category selection
-    category = st.selectbox("Category", options=list(categories.keys()) + ["Blogger"])
+    category = st.selectbox("Category", options=list(categories.keys()))
 
-    if category == "Blogger":
-        all_subcategories = ["None"] + [sub for subs in categories.values() for sub in subs]
-    else:
-        all_subcategories = ["None"] + categories.get(category, []) + ["Other"]
+    all_subcategories = ["None"] + categories.get(category, []) + ["Other"]
     
     subcategory = st.selectbox("Subcategory (Optional)", options=all_subcategories)
     
@@ -175,6 +183,9 @@ def main():
         other_subcategory = st.text_input("Please specify the subcategory")
     else:
         other_subcategory = None
+
+    # Account type selection
+    account_type = st.selectbox("Account Type", options=account_types)
 
     # City input (optional)
     city = st.text_input("City (Optional)")
@@ -190,25 +201,50 @@ def main():
             "category": category,
             "subcategory": subcategory,
             "other_subcategory": other_subcategory,
+            "account_type": account_type,  # Add account type to the form data
             "city": city,
             "country": country
         }
 
-        # Send data to the external API
-        api_url = "https://example.com/api/endpoint"  # Replace with your API URL
-        response = requests.post(api_url, json=form_data)
+        # Construct the query string
+        query_parts = []
 
-        if response.status_code == 200:
-            # Save form data to session state
-            st.session_state.form_data = form_data
-
-           
-            st.write("Submitted")
-
-          
-           
+        # Use the other_subcategory if specified, otherwise use the subcategory
+        if other_subcategory:
+            query_parts.append(other_subcategory)
         else:
-            st.error("Failed to submit data. Please try again later.")
+            query_parts.append(subcategory)
+
+        # Add the account type
+        query_parts.append(account_type)
+
+        # Add the city and/or country if specified
+        if city:
+            query_parts.append(city)
+        if country:
+            query_parts.append(country)
+
+        # Join the parts into a single query string
+        query_string = " ".join(query_parts)
+        print("Generated Query:", query_string)
+
+        # Call the scrape_instagram_similar_profiles function
+        similar_profiles_data = scrape_instagram_similar_profiles(query_string)
+
+        # Save the similar_profiles_data to session state
+        st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)  # Store the data in session state
+
+        # Define a function to run userData and save its result in the session state
+        def fetch_user_data():
+            user_data_response = userData(instagram_username)
+            st.session_state['user_data_response'] = user_data_response
+            print("User Data Response:", user_data_response)
+
+        # Run the userData function in a separate thread
+        threading.Thread(target=fetch_user_data).start()
+
+        # Navigate to the similar profiles page
+        st.switch_page("pages/2_similar_profiles.py")
 
 if __name__ == "__main__":
     main()

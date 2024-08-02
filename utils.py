@@ -412,6 +412,7 @@ def scrape_instagram_similar_profiles(query):
     "isUserReelFeedURL": False,
     "isUserTaggedFeedURL": False,
     "resultsType": "details",
+    "resultsLimit": 1
 
   }
 
@@ -433,4 +434,5 @@ def scrape_instagram_similar_profiles(query):
       })
 
   data_sorted = sorted(data, key=lambda x: x['followersCount'], reverse=True)
+  print(json.dumps(data_sorted))
   return json.dumps(data_sorted)    

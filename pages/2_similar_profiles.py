@@ -1,34 +1,39 @@
 import streamlit as st
-import streamlit.components.v1 as components
+import requests
+from PIL import Image
+from io import BytesIO
 
 def main():
     st.set_page_config(page_title="Similar Profiles", page_icon=":busts_in_silhouette:")
     st.title("Similar Profiles")
 
-    # trying out instagram post embed
-    instagram_url = "https://www.instagram.com/p/C-DzhHLNqDz/embed"
-    components.iframe(instagram_url, height=400, width=300)
+    # Access the similar_profiles_data from session state
+    if 'similar_profiles_data' in st.session_state:
+        similar_profiles_data = st.session_state['similar_profiles_data']
 
-    # Check if insights are available in session state
-    if 'insights' in st.session_state:
-        insights = st.session_state['insights']
-        st.write("Insights received from the form:")
-        st.json(insights)
+        # Display the similar profiles
+        for profile in similar_profiles_data:
+            st.write(f"**Username:** {profile['username']}")
+            st.write(f"**Followers:** {profile['followersCount']}")
+            st.write(f"**Biography:** {profile['biography']}")
+            
+            # Attempt to display the profile image
+            try:
+                # Make a request to fetch the image content
+                response = requests.get(profile['profilePicUrl'])
+                if response.status_code == 200:
+                    # If the request is successful, load the image using PIL
+                    image = Image.open(BytesIO(response.content))
+                    st.image(image, width=100)
+                else:
+                    st.write("Image could not be loaded")
+            except Exception as e:
+                st.write(f"Error loading image: {e}")
+
+            st.markdown(f"[Visit Profile]({profile['inputUrl']})")
+            st.write("---")
     else:
-        st.write("No insights available. Please go back to the form page and submit your query.")
-
-    # Example profiles, replace with real data as needed
-    profiles = [
-        {"name": "Profile A", "description": "This is profile A"},
-        {"name": "Profile B", "description": "This is profile B"},
-        {"name": "Profile C", "description": "This is profile C"},
-    ]
-
-    for profile in profiles:
-        if st.button(profile['name']):
-            st.session_state['selected_profile'] = profile
-            st.switch_page("pages/3_profile_details.py")
-
+        st.write("No similar profiles found. Please go back and try again.")
 
 if __name__ == "__main__":
     main()
