@@ -4,7 +4,10 @@ import json
 from utils import scrape_instagram_similar_profiles, userData
 import threading
 
-
+def remove_none_string(query):
+    if "None" in query:
+        return query.replace("None", "")
+    return query
 # Categories and subcategories
 categories = {
     "Beauty & Skincare": [
@@ -208,7 +211,8 @@ def main():
 
         # Construct the query string
         query_parts = []
-
+        query_parts.append(category
+                           )
         # Use the other_subcategory if specified, otherwise use the subcategory
         if other_subcategory:
             query_parts.append(other_subcategory)
@@ -223,19 +227,20 @@ def main():
             query_parts.append(city)
         if country:
             query_parts.append(country)
-
+        
         # Join the parts into a single query string
         query_string = " ".join(query_parts)
         print("Generated Query:", query_string)
-
+        query_string=remove_none_string(query_string)
         # Call the scrape_instagram_similar_profiles function
         similar_profiles_data = scrape_instagram_similar_profiles(query_string)
-
+        st.session_state['query']=query_string
         # Save the similar_profiles_data to session state
         st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)  # Store the data in session state
 
         # Define a function to run userData and save its result in the session state
         def fetch_user_data():
+            
             user_data_response = userData(instagram_username)
             st.session_state['user_data_response'] = user_data_response
             print("User Data Response:", user_data_response)
