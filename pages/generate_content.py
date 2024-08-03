@@ -6,7 +6,6 @@ from langchain.chains import LLMChain
 import streamlit as st
 
 st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
-
 st.markdown(
     """
     <style>
@@ -81,7 +80,7 @@ st.markdown(
         padding: 10px;
         font-size: 16px;
     }
-      .navbar {
+    .navbar {
         background-color: #ff5733;
         padding: 1rem;
         text-align: center;
@@ -102,66 +101,87 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
-st.header("Out of post ideas? We've got you covered with endless inspiration!🪄🪄")
+def main():
+  
+    st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
 
-memory = ConversationBufferMemory()
+    if 'query' in st.session_state:
+        st.header("Out of post ideas? We've got you covered with endless inspiration!🪄🪄")
+        
+        memory = ConversationBufferMemory()
 
-# Initialize session state variable for chat history
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
-else:
-    for message in st.session_state.chat_history:
-        memory.save_context({'input': message['human']}, {'output': message['AI']})
+        # Initialize session state variable for chat history
+        if 'chat_history' not in st.session_state:
+            st.session_state.chat_history = []
+        
+        for message in st.session_state.chat_history:
+            if 'human' in message:
+                memory.save_context({'input': message['human']}, {'output': message['AI']})
+            else:
+                memory.save_context({'input': "give reel ideas!"}, {'output': message['AI']})
 
-# Define the prompt template
-prompt_template = PromptTemplate(
-    input_variables=['history', 'input'],
-    template='''
+        # Define the prompt template
+        prompt_template = PromptTemplate(
+            input_variables=['history', 'input'],
+            template='''
 You are an Instagram content creation expert. You give descriptive ideas to create interesting and engaging reels to increase engagement on Instagram account. 
 Give reel ideas according to the description of the account which is ''' + st.session_state.query + '''. Give entire process and detailed description of what is to be done in the reel, including location where it is to be shot.
 If any city or country is mentioned, add some cultural stuff in the reel ideas as well. Do not suggest to put popular hashtags, music.
-Do not greet the user. Do not say Thank you. Give a list of reel ideas.Each idea should be on separate line. Do not show your enthusiasm.
+Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Only give a list of reel ideas.Each idea should be on separate line.Do not mention the work "City".Do not mention the word "Country". Do not show your enthusiasm.
 Conversation history:
 '{history}'
 Human: '{input}'
 AI:
-    '''
-)
+            '''
+        )
 
-ai71_api_key = os.getenv('AI71_TOKEN')
-AI71_BASE_URL = "https://api.ai71.ai/v1/"
-AI71_API_KEY = ai71_api_key
+        ai71_api_key = os.getenv('AI71_TOKEN')
+        AI71_BASE_URL = "https://api.ai71.ai/v1/"
+        AI71_API_KEY = ai71_api_key
 
-llm = ChatOpenAI(
-    model="tiiuae/falcon-180B-chat",
-    api_key=AI71_API_KEY,
-    base_url=AI71_BASE_URL,
-    streaming=True,
-    temperature=0.7,
-)
+        llm = ChatOpenAI(
+            model="tiiuae/falcon-180B-chat",
+            api_key=AI71_API_KEY,
+            base_url=AI71_BASE_URL,
+            streaming=True,
+            temperature=0.7,
+        )
 
-# Create the conversation chain
-conversation_chain = LLMChain(llm=llm, prompt=prompt_template, memory=memory, verbose=True)
+        # Create the conversation chain
+        conversation_chain = LLMChain(llm=llm, prompt=prompt_template, memory=memory, verbose=True)
 
-# Function to process user input and generate response
-def generate_response(user_input):
-    response = conversation_chain({'input': user_input, 'history': st.session_state.chat_history})
-    message = {'human': user_input, 'AI': response['text']}
-    st.session_state.chat_history.append(message)
+        # Function to process user input and generate response
+        def generate_response(user_input):
+            with st.spinner('Generating response...'):
+                response = conversation_chain({'input': user_input, 'history': st.session_state.chat_history})
+                if st.session_state.chat_history == []:
+                    message = {'AI': response['text']}
+                else:
+                    message = {'human': user_input, 'AI': response['text']}
+                st.session_state.chat_history.append(message)
 
-# Chat input and send button
-with st.form(key='chat_form', clear_on_submit=True):
-    user_input = st.text_input("Enter your message here", key="user_input", placeholder="Type your message...")
-    submit_button = st.form_submit_button(label="➤")
-    
-    if submit_button and user_input:
-        generate_response(user_input)
+        # Chat input and send button
+        with st.form(key='chat_form', clear_on_submit=True):
+            user_input = st.text_input("Enter your message here", key="user_input", placeholder="Type your message...")
+            submit_button = st.form_submit_button(label="➤")
+            if st.session_state.chat_history==[]:
+                generate_response("give reel ideas!")
+            else: 
+                if submit_button and user_input:
+                    generate_response(user_input)
 
-# Display the conversation with emojis
-with st.container():
-    chat_container = st.container()
-    with chat_container:
-        for message in reversed(st.session_state.chat_history):
-            st.markdown(f"<div class='message-human'>👤 : {message['human']}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='message-ai'>🤖 : {message['AI']}</div>", unsafe_allow_html=True)
+        # Display the conversation with emojis
+        with st.container():
+            chat_container = st.container()
+            with chat_container:
+                for message in reversed(st.session_state.chat_history):
+                    if 'human' in message:
+                        st.markdown(f"<div class='message-human'>👤  {message['human']}</div>", unsafe_allow_html=True)
+                        st.markdown(f"<div class='message-ai'>🤖 {message['AI']}</div>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"<div class='message-ai'>🤖 {message['AI']}</div>", unsafe_allow_html=True)    
+
+    else:
+        st.write("Fill the details form first.")
+if __name__ == "__main__":
+    main()

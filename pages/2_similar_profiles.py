@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 from PIL import Image
 from io import BytesIO
-from utils import getInsightsForProfile
 
 # Define custom CSS for Instagram-like theme
 custom_css = """
@@ -56,13 +55,7 @@ def format_number(number):
     """Format a number with commas as thousands separators."""
     return f"{number:,}"
 
-# Example usage
-formatted_1000 = format_number(1000)       # Outputs '1,000'
-formatted_100000 = format_number(100000)   # Outputs '100,000'
-
-print(formatted_1000)
-print(formatted_100000)
-
+from utils import getInsightsForProfile
 
 # Initialize the session state keys if they do not exist
 if 'user_data_response' not in st.session_state:
@@ -115,7 +108,7 @@ def main():
                     st.session_state['selected_profile_url'] = profile['inputUrl']
                     
                     # Redirect to profile details page
-                    st.switch_page("pages/3_profile_details.py")
+                    st.experimental_rerun()
                 elif st.session_state.get('user_data_fetching', False):
                     st.warning("User data is still being fetched. Please try again in a few seconds.")
                 else:
