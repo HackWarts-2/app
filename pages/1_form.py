@@ -221,8 +221,7 @@ def main():
 
         # Construct the query string
         query_parts = []
-        query_parts.append(category
-                           )
+        query_parts.append(category) 
         # Use the other_subcategory if specified, otherwise use the subcategory
         if other_subcategory:
             query_parts.append(other_subcategory)
