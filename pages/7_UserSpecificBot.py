@@ -16,6 +16,14 @@ def create_instagram_profile_url(username):
     print(f"Profile URL: {profile_url}")
     return profile_url
 
+# Ensure that profile_url is stored in session state
+if 'profile_url' not in st.session_state:
+    st.session_state['profile_url'] = None
+
+# Ensure that data_ingested is stored in session state
+if 'data_ingested' not in st.session_state:
+    st.session_state['data_ingested'] = False
+
 st.markdown(
     """
     <style>
@@ -142,18 +150,6 @@ categories = [
     "Events & Parties", "Books & Literature", "Miscellaneous"
 ]
 
-# Ensure that profile_url is stored in session state
-if 'profile_url' not in st.session_state:
-    st.session_state.profile_url = None
-
-# Form to select category and optionally input username
-if 'category' not in st.session_state:
-    with st.form(key='user_input_form'):
-        selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
-
-        if form_submit:
-            st.session_state['category'] = selected_category  # Save category to session state
 
 # Only load chat functionality if the category is set
 if 'category' in st.session_state:
@@ -181,21 +177,7 @@ if 'category' in st.session_state:
         "Entertainment": "Entertainment"
     }.get(st.session_state['category'], None)
 
-    with st.form(key='user_input_form_two'):
-        username = st.text_input("Instagram Username (Optional - only enter this if you only want results from a specific profile)", key="username_input", help="Enter the Instagram username you want to search for. Make sure it is a valid username. Data of that profile will be ingested into the vector database and used for grounded answers to your questions.")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
-
-        if form_submit:
-            st.session_state['username'] = username  # Optionally save username to session state
-            st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-            st.session_state['data_ingested'] = False  # Initialize the flag to False
-
-
-    if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
-        print(f"Using Instagram username {st.session_state['username']} for search.")
-        st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-        print(st.session_state.profile_url)
-        # Attempt to ingest data for the username
+    if st.session_state.profile_url and not st.session_state.get('data_ingested', False):
         try:
             st.write("Ingesting this user's data into the vector database - please hold a minute or two...")
             ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
@@ -205,20 +187,19 @@ if 'category' in st.session_state:
             st.error("This username isn't valid - please enter a valid username.")
             st.error(f"Error details: {e}")
 
-
     if collection_name:
         st.write(f"Using collection: {collection_name}")
     else:
         st.error("Selected category does not have a corresponding collection in the database.")
 
-    chat_memory = ConversationBufferMemory()
+    user_chat_memory = ConversationBufferMemory()
 
     # Initialize session state variable for chat history
-    if 'conversation_history' not in st.session_state:
-        st.session_state.conversation_history = []
+    if 'user_conversation_history' not in st.session_state:
+        st.session_state.user_conversation_history = []
     else:
-        for message in st.session_state.conversation_history:
-            chat_memory.save_context({'input': message['human']}, {'output': message['AI']})
+        for message in st.session_state.user_conversation_history:
+            user_chat_memory.save_context({'input': message['human']}, {'output': message['AI']})
 
     # Define the prompt template
     prompt_template_rag = PromptTemplate(
@@ -237,7 +218,7 @@ if 'category' in st.session_state:
 
     ai71_api_key = st.secrets['AI71_TOKEN']
 
-    #ai71_api_key = os.getenv('AI71_TOKEN')
+    # ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 
@@ -250,7 +231,7 @@ if 'category' in st.session_state:
     )
 
     # Create the conversation chain
-    conversation_chain_rag = LLMChain(llm=llm, prompt=prompt_template_rag, memory=chat_memory, verbose=True)
+    user_conversation_chain_rag = LLMChain(llm=llm, prompt=prompt_template_rag, memory=user_chat_memory, verbose=True)
 
     # Function to process user input and generate response
     def generate_response(user_input):
@@ -298,7 +279,7 @@ if 'category' in st.session_state:
         if len(augmented_input) > 3500:
             augmented_input = augmented_input[:3500]
         
-        response = conversation_chain_rag({'input': augmented_input, 'history': st.session_state.conversation_history})
+        response = user_conversation_chain_rag({'input': augmented_input, 'history': st.session_state.user_conversation_history})
         
         # Append references to the response text
         final_response = response['text']
@@ -306,7 +287,7 @@ if 'category' in st.session_state:
             final_response += "\n\n**REFERENCES**:\n" + references
 
         message = {'human': user_input, 'AI': final_response}
-        st.session_state.conversation_history.append(message)
+        st.session_state.user_conversation_history.append(message)
 
         # Display the post embeds in an expander
         with st.expander("View Reference Posts"):
@@ -325,9 +306,9 @@ if 'category' in st.session_state:
     with st.container():
         chat_container = st.container()
         with chat_container:
-            for message in reversed(st.session_state.conversation_history):
+            for message in reversed(st.session_state.user_conversation_history):
                 if 'human' in message:                           
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                     st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True) 
+                    st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)

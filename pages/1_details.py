@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import json
-from utils import scrape_instagram_similar_profiles, userData
+from app.utils import scrape_instagram_similar_profiles, userData
 
 # Initialize the session state keys if they do not exist
 if 'similar_profiles_data' not in st.session_state:

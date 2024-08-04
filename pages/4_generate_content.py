@@ -111,6 +111,8 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+def remove_user_word(sentence):
+    return sentence.replace("User:", "").strip()
 def main():
     st.markdown('<div class="navbar">Cure Your Content Drought🤖 💬.</div>', unsafe_allow_html=True)
     st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
@@ -122,8 +124,8 @@ def main():
     st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     tabs = st.tabs(["Reels", "Posts", "Stories"])
-    ai71_api_key = st.secrets['AI71_TOKEN']
-    # ai71_api_key = os.getenv('AI71_TOKEN')
+    #ai71_api_key = st.secrets['AI71_TOKEN']
+    ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 
@@ -199,9 +201,9 @@ AI:
                     for message in (st.session_state.chat_history):
                         if 'human' in message:
                             st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)    
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)    
 
         else:
             st.write("Fill the details form first.")
@@ -272,10 +274,10 @@ AI:
                     for message in (st.session_state.posts_chat_history):
                         if 'human' in message:
                             st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)
                             
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)  
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)  
     
     with tabs[2]:
         if 'query' in st.session_state:
@@ -349,10 +351,10 @@ AI:
                     for message in (st.session_state.stories_chat_history):
                         if 'human' in message:
                             st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)
                             
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
+                            st.markdown(f"<div class='message-ai'>🤖<br> {remove_user_word(message['AI'])}</div>", unsafe_allow_html=True)   
 
 if __name__ == "__main__":
     main()

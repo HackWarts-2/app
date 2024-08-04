@@ -1,7 +1,6 @@
 from apify_client import ApifyClient
 import requests
 import json
-import streamlit as st
 import os
 # from dotenv import load_dotenv
 import weaviate
@@ -334,7 +333,7 @@ def scrape_instagram_similar_profiles(query):
     "isUserReelFeedURL": False,
     "isUserTaggedFeedURL": False,
     "resultsType": "details",
-    "resultsLimit": 1
+    "resultsLimit": 5
 
   }
 
@@ -395,7 +394,222 @@ def vector_search(query, collection):
     )
     result = []
     for o in response.objects:
-        print(o.properties)
+        #print(o.properties)
         result.append(o.properties)
-        print(o.metadata.distance)
+        #print(o.metadata.distance)
+    return result
+
+def create_collection(name):
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=WEAVIATE_URL,
+        auth_credentials=Auth.api_key(WEAVIATE_API_KEY),
+    )
+    client.collections.create(
+        name,
+        vectorizer_config=wvc.config.Configure.Vectorizer.none(),
+
+        properties=[
+            Property(
+                name="profileURL",
+                data_type=DataType.TEXT,
+                skip_vectorization=True,
+                tokenization=Tokenization.FIELD
+            ),
+            Property(
+                name="postURL",
+                data_type=DataType.TEXT,
+                skip_vectorization=True,
+                tokenization=Tokenization.FIELD
+            ),
+            Property(
+                name="content",
+                data_type=DataType.TEXT,
+                tokenization=Tokenization.WHITESPACE
+            ),
+        ]
+    )
+    return "Collection created successfully!"
+
+def getPosts(url):
+    # Initialize the ApifyClient with API token
+    client = ApifyClient(apify_api_key)
+
+    # Prepare the Actor input
+    run_input = {
+        "addParentData": False,
+        "directUrls": [url],
+        "enhanceUserSearchWithFacebookPage": True,
+        "isUserReelFeedURL": True,
+        "isUserTaggedFeedURL": False,
+        "resultsLimit": 3,
+        "resultsType": "posts",
+    }
+
+    posts = []
+
+    # Run the Actor and wait for it to finish
+    run = client.actor("shu8hvrXbJbY3Eb9W").call(run_input=run_input)
+
+    # Fetch and print Actor results from the run's dataset (if there are any)
+    for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+        posts.append(item)
+    print("Length of posts: " + str(len(posts)))
+
+    def extractPostData(original_dict):
+        # Extract the necessary information from the original dictionary
+        extracted_info = {
+            'type': original_dict.get('type'),
+            'timestamp': original_dict.get('timestamp'),
+            'caption': original_dict.get('caption'),
+            'hashtags': ' '.join(['#' + tag for tag in original_dict.get('hashtags') or []]),
+            'mentions': ' '.join(['@' + mention for mention in original_dict.get('mentions') or []]),
+            'url': original_dict.get('url'),
+            'videoUrl': original_dict.get('videoUrl') if original_dict.get('type') == 'Video' else None,
+            'displayUrl': original_dict.get('displayUrl'),
+            'commentsCount': original_dict.get('commentsCount'),
+            'likesCount': original_dict.get('likesCount'),
+            'videoViewCount': original_dict.get('videoViewCount') if original_dict.get('type') == 'Video' else None,
+            'videoPlayCount': original_dict.get('videoPlayCount') if original_dict.get('type') == 'Video' else None,
+            'ownerUsername': original_dict.get('ownerUsername'),
+            'taggedUsers': ' '.join(['@' + user['username'] for user in original_dict.get('taggedUsers', [])]),
+            'latestComments': '\n'.join([comment['text'] for comment in original_dict.get('latestComments', [])])
+        }
+
+        # Create a content string to include all the extracted details
+        content = f"""type: {extracted_info['type']}
+        timestamp: {extracted_info['timestamp']}
+        caption: {extracted_info['caption']}
+        hashtags: {extracted_info['hashtags']}
+        mentions: {extracted_info['mentions']}
+        commentsCount: {extracted_info['commentsCount']}
+        likesCount: {extracted_info['likesCount']}
+        videoViewCount: {extracted_info['videoViewCount']}
+        videoPlayCount: {extracted_info['videoPlayCount']}
+        ownerUsername: {extracted_info['ownerUsername']}
+        taggedUsers: {extracted_info['taggedUsers']}
+        latestComments: {extracted_info['latestComments']}
+        """
+
+        post_url = extracted_info['url']  # Extract the post's URL
+
+        return content, post_url
+
+    extracted_posts = []
+    for post in posts:
+        extracted_post, post_url = extractPostData(post)
+        extracted_posts.append({"profileURL": url, "postURL": post_url, "content": extracted_post})
+    return extracted_posts
+
+def getSimilarProfiles(query):
+    searchQuery = query
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        "q": searchQuery,
+        "key": google_api_key,
+        "cx": search_engine_id,
+        "num": 5
+    }
+
+    response = requests.get(url, params=params)
+    results = response.json()
+    links_array = [item['link'] for item in results['items']]
+    print(links_array)
+
+    all_posts_data = []
+
+    for link in links_array:
+        print(link)
+        posts_data = getPosts(link)
+        all_posts_data.extend(posts_data)  # Combine all posts into one list
+    return all_posts_data
+
+
+def add_embeddings_to_posts(posts_data):
+    """
+    Adds vector embeddings to each post's content.
+
+    Args:
+        posts_data (list of dicts): List of dictionaries with keys: profileURL, postURL, content.
+
+    Returns:
+        list of dicts: Updated list with an added "vector" key containing the embeddings.
+    """
+    # Initialize the Hugging Face Embedding class
+    embeddings_model = HuggingFaceEmbeddings()
+
+    vectors = []
+
+    for post in posts_data:
+        content = post['content']
+        # Generate embeddings for the content
+        vector = embeddings_model.embed_query(content)
+        # Add the vector embeddings to the dictionary
+        vectors.append(vector)
+
+    return vectors
+
+def ingest_data(category, collection):  
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=WEAVIATE_URL,
+        auth_credentials=Auth.api_key(WEAVIATE_API_KEY),
+    )
+    data = getSimilarProfiles(category)
+    vectors = add_embeddings_to_posts(data)
+
+    collection = client.collections.get(collection)
+
+    with collection.batch.dynamic() as batch:
+        for i, data_row in enumerate(data):
+            batch.add_object(
+                properties=data_row,
+                vector=vectors[i]
+            )
+    return "Data ingested successfully!"
+
+def ingest_user_data(user, collection):  
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=WEAVIATE_URL,
+        auth_credentials=Auth.api_key(WEAVIATE_API_KEY),
+    )
+    data = getPosts(user)
+    vectors = add_embeddings_to_posts(data)
+
+    collection = client.collections.get(collection)
+
+    with collection.batch.dynamic() as batch:
+        for i, data_row in enumerate(data):
+            # print(f"i: {i} data_row: {data_row}")
+            # print(f"vectors: {vectors[i]}")
+            batch.add_object(
+                properties=data_row,
+                vector=vectors[i]
+            )
+    return "Data ingested successfully!"
+
+def vector_search_filtered(query, collection, url):
+    print("FILTERED!!!")
+  # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=WEAVIATE_URL,
+        auth_credentials=Auth.api_key(WEAVIATE_API_KEY),
+    )
+
+    collection = client.collections.get(collection)
+
+    query_vector = convert_text_to_embeddings(query)
+
+    response = collection.query.near_vector(
+        near_vector=query_vector,
+        limit=5,
+        filters=Filter.by_property("profileURL").equal(url),
+        return_metadata=MetadataQuery(distance=True)
+    )
+    result = []
+    for o in response.objects:
+        #print(o.properties)
+        result.append(o.properties)
+        #print(o.metadata.distance)
     return result

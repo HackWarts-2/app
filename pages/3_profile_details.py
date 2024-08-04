@@ -20,10 +20,7 @@ custom_css = """
         border-radius: 10px;
         margin-bottom: 2rem;
     }
-    .profile-details-container {
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
+    
     .sidebar-font{
                 color:black}
     .stMarkdown {
@@ -64,7 +61,7 @@ def main():
         insights = st.session_state['selected_profile_insights']
         profile_url = st.session_state['selected_profile_url']
 
-        st.markdown(f'<div class="profile-details-container"><p>Profile URL: <a href="{profile_url}" target="_blank">{profile_url}</a></p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div><p>Profile URL: <a href="{profile_url}" target="_blank">{profile_url}</a></p></div>', unsafe_allow_html=True)
         
         # Display each post's insight and embed the post
         for post_url, insight in insights.items():

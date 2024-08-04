@@ -60,7 +60,7 @@ def format_number(number):
     """Format a number with commas as thousands separators."""
     return f"{number:,}"
 
-from utils import getInsightsForProfile
+from app.utils import getInsightsForProfile
 
 # Initialize the session state keys if they do not exist
 if 'user_data_response' not in st.session_state:
@@ -68,8 +68,7 @@ if 'user_data_response' not in st.session_state:
 
 def main():
     st.set_page_config(page_title="Similar Profiles", page_icon=":busts_in_silhouette:")
-    st.markdown('<div class="navbar">Cure Your Content Drought🤖 💬.</div>', unsafe_allow_html=True)
-    st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+    
     with st.sidebar:
         st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
         st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
