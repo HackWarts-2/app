@@ -116,7 +116,6 @@ def main():
                 base_url=AI71_BASE_URL,
                 streaming=True,
                 temperature=0.7,
-                max_tokens=500,
             )
     with tabs[0]:
         if 'query' in st.session_state:
@@ -179,12 +178,12 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in st.session_state.chat_history:
+                    for message in (st.session_state.chat_history):
                         if 'human' in message:
                             st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)    
 
         else:
             st.write("Fill the details form first.")
@@ -248,13 +247,13 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in st.session_state.chat_history:
+                    for message in (st.session_state.posts_chat_history):
                         if 'human' in message:
-                            st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
+                           
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
-
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)  
     
     with tabs[2]:
         if 'query' in st.session_state:
@@ -320,13 +319,13 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in st.session_state.chat_history:
+                    for message in (st.session_state.stories_chat_history):
                         if 'human' in message:
-                            st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
+                           
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                         else:
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
- 
 
 if __name__ == "__main__":
     main()
