@@ -24,6 +24,8 @@ custom_css = """
         padding: 2rem;
         margin-bottom: 2rem;
     }
+    .sidebar-font{
+                color:black}
     .stMarkdown {
         color: #E4405F; /* Instagram red */
     }
@@ -44,7 +46,13 @@ custom_css = """
 
 def main():
     st.set_page_config(page_title="Profile Details", page_icon=":bust_in_silhouette:")
-    
+    with st.sidebar:
+        st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
+        st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
+    st.sidebar.page_link('pages/1_details.py', label='Details')
+    st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
+    st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
+    st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     # Apply custom CSS
     st.markdown(custom_css, unsafe_allow_html=True)
     
