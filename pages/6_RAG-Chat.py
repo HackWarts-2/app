@@ -1,5 +1,6 @@
 import os
 from langchain_community.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts.prompt import PromptTemplate
 from langchain.chains import LLMChain
@@ -8,6 +9,13 @@ import streamlit as st
 import streamlit.components.v1 as components
 from app.utils import vector_search, vector_search_filtered, ingest_user_data
 
+st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
+
+def create_instagram_profile_url(username):
+    base_url = "https://www.instagram.com/"
+    profile_url = f"{base_url}{username}/"
+    print(f"Profile URL: {profile_url}")
+    return profile_url
 st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
 
 def create_instagram_profile_url(username):
@@ -63,6 +71,24 @@ st.markdown(
         cursor: pointer;
         margin-bottom: 20px;
     }
+    .category-input, .username-input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 2px solid #E1306C;
+        background-color: #F7F7F7;
+        font-size: 16px;
+    }
+    .category-submit, .username-submit {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background: linear-gradient(45deg, #ff6a00, #ee0979, #bd10e0);
+        color: white;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
     .send-button {
         padding: 10px 20px;
         border-radius: 5px;
@@ -87,6 +113,7 @@ st.markdown(
     }
     .message-ai {
         background-color: #E1306C; /* Instagram pink */
+        background-color: #E1306C; /* Instagram pink */
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
@@ -108,6 +135,8 @@ st.markdown(
         padding: 10px;
         font-size: 16px;
     }
+      .navbar {
+        background-color: #ff5733;
       .navbar {
         background-color: #ff5733;
         padding: 1rem;
@@ -133,6 +162,10 @@ st.markdown(
 st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
 st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
 
+
+st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
+st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+
 # Define the categories
 categories = [
     "Beauty & Skincare", "Fashion", "Food & Drink", "Health & Fitness", "Travel",
@@ -146,9 +179,15 @@ categories = [
 if 'profile_url' not in st.session_state:
     st.session_state.profile_url = None
 
+# Ensure that profile_url is stored in session state
+if 'profile_url' not in st.session_state:
+    st.session_state.profile_url = None
+
 # Form to select category and optionally input username
 if 'category' not in st.session_state:
     with st.form(key='user_input_form'):
+        selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
+        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
         selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
         form_submit = st.form_submit_button(label="Submit", use_container_width=True)
 
@@ -180,6 +219,31 @@ if 'category' in st.session_state:
         "Gaming": "Gaming",
         "Entertainment": "Entertainment"
     }.get(st.session_state['category'], None)
+
+    with st.form(key='user_input_form_two'):
+        username = st.text_input("Instagram Username (Optional - only enter this if you only want results from a specific profile)", key="username_input", help="Enter the Instagram username you want to search for. Make sure it is a valid username. Data of that profile will be ingested into the vector database and used for grounded answers to your questions.")
+        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
+
+        if form_submit:
+            st.session_state['username'] = username  # Optionally save username to session state
+            st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
+            st.session_state['data_ingested'] = False  # Initialize the flag to False
+
+
+    if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
+        print(f"Using Instagram username {st.session_state['username']} for search.")
+        st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
+        print(st.session_state.profile_url)
+        # Attempt to ingest data for the username
+        try:
+            st.write("Ingesting this user's data into the vector database - please hold a minute or two...")
+            ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
+            st.session_state['data_ingested'] = True  # Set the flag to True after successful ingestion
+            st.success("Data ingested successfully! Go ahead and start chatting about this user.")
+        except Exception as e:
+            st.error("This username isn't valid - please enter a valid username.")
+            st.error(f"Error details: {e}")
+
 
     with st.form(key='user_input_form_two'):
         username = st.text_input("Instagram Username (Optional - only enter this if you only want results from a specific profile)", key="username_input", help="Enter the Instagram username you want to search for. Make sure it is a valid username. Data of that profile will be ingested into the vector database and used for grounded answers to your questions.")
@@ -265,19 +329,28 @@ if 'category' in st.session_state:
         def extract_references(search_results):
             references = []
             embed_urls = []
+            embed_urls = []
             for i, result in enumerate(search_results):
                 post_url = result.get('postURL', '')
                 profile_url = result.get('profileURL', '')
                 reference = f"Reference {i+1}:"
                 if post_url:
                     embed_urls.append(post_url)
+                    embed_urls.append(post_url)
                 if profile_url:
                     reference += f"\n- Profile URL: [{profile_url}]({profile_url})"
                 if reference != f"Reference {i+1}:":  # Ensure there is content to show
                     references.append(reference)
             return "\n\n".join(references), embed_urls
+            return "\n\n".join(references), embed_urls
 
         # Perform vector search based on user input and collection name
+        if st.session_state.get('profile_url') and st.session_state.get('data_ingested', False):
+            print("Profile URL is set and data is ingested")
+            search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
+        else:
+            search_results = vector_search(user_input, collection_name)
+        #print(search_results)
         if st.session_state.get('profile_url') and st.session_state.get('data_ingested', False):
             print("Profile URL is set and data is ingested")
             search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
@@ -291,9 +364,14 @@ if 'category' in st.session_state:
         # Extract references from search results
         references, embed_urls = extract_references(search_results)
         #print(references)
+        references, embed_urls = extract_references(search_results)
+        #print(references)
 
         # Prepare input for the model
         augmented_input = f"User: {user_input}. Retrieved context: {combined_content}"
+
+        if len(augmented_input) > 3500:
+            augmented_input = augmented_input[:3500]
 
         if len(augmented_input) > 3500:
             augmented_input = augmented_input[:3500]
@@ -307,6 +385,11 @@ if 'category' in st.session_state:
 
         message = {'human': user_input, 'AI': final_response}
         st.session_state.conversation_history.append(message)
+
+        # Display the post embeds in an expander
+        with st.expander("View Reference Posts"):
+            for url in embed_urls:
+                components.iframe(f"{url}embed", height=400, width=300)
 
         # Display the post embeds in an expander
         with st.expander("View Reference Posts"):
@@ -327,7 +410,11 @@ if 'category' in st.session_state:
         with chat_container:
             for message in reversed(st.session_state.conversation_history):
                 if 'human' in message:                           
+            for message in reversed(st.session_state.conversation_history):
+                if 'human' in message:                           
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                     st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                 else:
+                    st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True) 
+
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True) 
