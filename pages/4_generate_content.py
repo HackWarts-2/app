@@ -116,6 +116,7 @@ def main():
                 base_url=AI71_BASE_URL,
                 streaming=True,
                 temperature=0.7,
+                max_tokens=500,
             )
     with tabs[0]:
         if 'query' in st.session_state:
