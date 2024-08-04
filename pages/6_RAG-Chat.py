@@ -7,7 +7,7 @@ import openai
 import streamlit as st
 from utils import vector_search
 
-st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
+st.set_page_config(page_title="Ask Me", page_icon=":robot:")
 
 st.markdown(
     """
@@ -61,7 +61,7 @@ st.markdown(
         color: #8A3AB9; /* Instagram purple */
     }
     .message-ai {
-        background-color: #E1306C; /* Instagram pink */
+        background-color: #8a49a1; /* Instagram pink */
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
@@ -83,8 +83,10 @@ st.markdown(
         padding: 10px;
         font-size: 16px;
     }
-      .navbar {
-        background-color: #ff5733;
+    .sidebar-font{
+                color:black}
+    .navbar {
+        background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
         color: white;
@@ -104,9 +106,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
-st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-
+st.markdown('<div class="navbar">Ask Me🤖 💬.</div>', unsafe_allow_html=True)
+st.header("Explore trends, deals, and events, or dive into specific profiles by providing a username.👤Engage with our bot, ask questions, and discover what's trending in the Instagram world!📱💬")
+with st.sidebar:
+    st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
+    st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
+    st.sidebar.page_link('pages/1_details.py', label='Details')
+    st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
+    st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
+    st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
 # Define the categories
 categories = [
     "Beauty & Skincare", "Fashion", "Food & Drink", "Health & Fitness", "Travel",
@@ -183,8 +191,7 @@ if 'category' in st.session_state:
     )
 
     ai71_api_key = st.secrets['AI71_TOKEN']
-
-    #ai71_api_key = os.getenv('AI71_TOKEN')
+    # ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 
@@ -260,7 +267,7 @@ if 'category' in st.session_state:
         chat_container = st.container()
         with chat_container:
             for message in (st.session_state.conversation_history):
-                if 'human' in message:                           
+                if 'human' in message:
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                     st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                 else:

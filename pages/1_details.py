@@ -219,6 +219,8 @@ def main():
     # Account type selection
     account_type = st.selectbox("Account Type", options=account_types)
 
+    st.write("Only specify a city and/or coutry if you want results from that specific region. Not specifying will return gloabl results.")
+
     # City input (optional)
     city = st.text_input("City (Optional)")
 
