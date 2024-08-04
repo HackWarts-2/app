@@ -131,58 +131,72 @@ def main():
 
     # Custom CSS for Instagram theme
     st.markdown("""
-        <style>
-            .reportview-container {
-                background-color: #F7F7F7;
-            }
-            .sidebar .sidebar-content {
-                background-color: #ffffff;
-            }
-            .stApp {
-                background-color: #ffffff;
-            }
-            .stButton>button {
-                background-color: #E1306C; /* Instagram pink */
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-            }
-            .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-                border: 1px solid #E1306C; /* Instagram pink */
-                background-color: #F7F7F7;
-                border-radius: 5px;
-                padding: 10px;
-                font-size: 16px;
-            }
-            .stSelectbox>div>div>select {
-                border: 1px solid #E1306C; /* Instagram pink */
-                background-color: #F7F7F7;
-                border-radius: 5px;
-                padding: 10px;
-                font-size: 16px;
-            }
-            .stTitle, .stHeader, .stSubheader {
-                color: #405DE6; /* Instagram blue */
-            }
-            .stText {
-                color: #8A3AB9; /* Instagram purple */
-            }
-            .stMarkdown {
-                color: #E4405F; /* Instagram red */
-            }
-            .stAlert {
-                background-color: #F5F5F5;
-            }
-            .css-1v3fvcr {
-                color: #E1306C; /* Instagram pink */
-            }
-        </style>
+         <style>
+    .reportview-container {
+        background-color: #F7F7F7;
+    }
+    .sidebar .sidebar-content {
+        background-color: #ffffff;
+    }
+    .stApp {
+        background-color: #ffffff;
+    }
+    .navbar {
+        background-color: #8a49a1;
+        padding: 1rem;
+        text-align: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+    .stButton>button {
+        background-color: #e56969;  
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .stButton>button:active {
+        background-color: grey;
+        color: white;
+    }
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+        border: 1px solid #c1888b;
+        background-color: #F7F7F7;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .stSelectbox>div>div>select {
+        border: 1px solid #c1888b;
+        background-color: #F7F7F7;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .stTitle, .stHeader, .stSubheader {
+        color: #405DE6; /* Instagram blue */
+    }
+    .stText {
+        color: #8A3AB9; /* Instagram purple */
+    }
+    .stMarkdown {
+        color: #E4405F; /* Instagram red */
+    }
+    .stAlert {
+        background-color: #F5F5F5;
+    }
+    .css-1v3fvcr {
+        color: #c1888b;  
+    }
+    </style>
     """, unsafe_allow_html=True)
 
-    st.title("Details")
+    st.markdown('<div class="navbar">User Details</div>', unsafe_allow_html=True)
 
     # Instagram username input (optional)
     instagram_username = st.text_input("Instagram Username (Optional)")
@@ -211,6 +225,7 @@ def main():
 
     # Handle form submission
     if st.button("Done"):
+       with st.spinner("Fetching Profiles That Match Your Input......"):
         # Prepare the data for the request
         form_data = {
             "instagram_username": instagram_username,
@@ -248,12 +263,12 @@ def main():
         # Join the parts into a single query string
         query_string = " ".join(query_parts)
         print("Generated Query:", query_string)
-        query_string=remove_none_string(query_string)
+        query_string = remove_none_string(query_string)
         # Call the scrape_instagram_similar_profiles function
-        similar_profiles_data = scrape_instagram_similar_profiles(query_string)
-        st.session_state['query']=query_string
+       # similar_profiles_data = scrape_instagram_similar_profiles(query_string)
+        st.session_state['query'] = query_string
         # Save the similar_profiles_data to session state
-        st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)
+       # st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)
 
         # Set the user_data_fetching flag to True
         st.session_state['user_data_fetching'] = True
@@ -264,7 +279,8 @@ def main():
         st.session_state['user_data_fetching'] = False
 
         print("User Data Response:", user_data_response)
-        st.session_state.details_entered=True
+        st.session_state.details_entered = True
+
         # Navigate to the similar profiles page
         st.switch_page("pages/2_similar_profiles.py")
 
