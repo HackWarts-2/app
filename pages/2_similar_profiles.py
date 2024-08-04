@@ -108,7 +108,7 @@ def main():
                     st.session_state['selected_profile_url'] = profile['inputUrl']
                     
                     # Redirect to profile details page
-                   
+                    st.switch_page("pages/3_profile_details.py")
                 elif st.session_state.get('user_data_fetching', False):
                     st.warning("User data is still being fetched. Please try again in a few seconds.")
                 else:
