@@ -68,8 +68,6 @@ if 'user_data_response' not in st.session_state:
 
 def main():
     st.set_page_config(page_title="Similar Profiles", page_icon=":busts_in_silhouette:")
-    st.markdown('<div class="navbar">Cure Your Content Drought🤖 💬.</div>', unsafe_allow_html=True)
-    st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
     with st.sidebar:
         st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
         st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
@@ -77,7 +75,6 @@ def main():
     st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
     st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
-    tabs = st.tabs(["Reels", "Posts", "Stories"])
     # Apply custom CSS
     st.markdown(custom_css, unsafe_allow_html=True)
     

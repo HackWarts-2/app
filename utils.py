@@ -442,7 +442,7 @@ def getPosts(url):
         "enhanceUserSearchWithFacebookPage": True,
         "isUserReelFeedURL": True,
         "isUserTaggedFeedURL": False,
-        "resultsLimit": 50,
+        "resultsLimit": 3,
         "resultsType": "posts",
     }
 
