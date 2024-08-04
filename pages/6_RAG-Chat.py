@@ -104,7 +104,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
+st.markdown('<div class="navbar">Ask Me</div>', unsafe_allow_html=True)
 st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
 
 # Define the categories
