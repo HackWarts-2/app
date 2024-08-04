@@ -3,6 +3,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts.prompt import PromptTemplate
 from langchain.chains import LLMChain
+import openai
 import streamlit as st
 from utils import vector_search
 

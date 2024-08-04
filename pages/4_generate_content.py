@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
+import openai
 
 import os
 st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
