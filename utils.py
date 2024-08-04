@@ -3,7 +3,7 @@ import requests
 import json
 import streamlit as st
 import os
-# from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import weaviate
 from weaviate.classes.init import Auth
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
@@ -11,6 +11,7 @@ from weaviate.classes.query import MetadataQuery
 from weaviate.classes.query import Filter
 from weaviate.classes.config import Configure, Property, DataType, Tokenization
 import weaviate.classes as wvc
+import streamlit as st
 
 
 #load_dotenv()
