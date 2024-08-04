@@ -11,13 +11,13 @@ st.markdown(
     <style>
     .chat-container {
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
         height: 60vh;
         overflow-y: auto;
         border: 1px solid #ccc;
         padding: 10px;
         background-color: #f9f9f9;
-        margin-bottom: 10px;
+        margin-bottom: 70px; /* Add margin to make space for the fixed input */
     }
     .chat-input-container {
         display: flex;
@@ -27,6 +27,8 @@ st.markdown(
         bottom: 10px;
         width: 90%;
         background-color: #ffffff;
+        padding: 10px;
+        border-top: 1px solid #ccc; /* Add a top border for better visibility */
     }
     .chat-input {
         width: 100%;
@@ -154,7 +156,7 @@ AI:
 
             # Function to process user input and generate response
             def generate_response(user_input):
-                with st.spinner('Generating response...'):
+                with st.spinner('Fetching some cool reel ideas...'):
                     response = conversation_chain({'input': user_input, 'history': st.session_state.chat_history})
                     if st.session_state.chat_history == []:
                         message = {'AI': response['text']}
@@ -176,12 +178,12 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in reversed(st.session_state.chat_history):
+                    for message in st.session_state.chat_history:
                         if 'human' in message:
                             st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)    
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
 
         else:
             st.write("Fill the details form first.")
@@ -223,7 +225,7 @@ AI:
 
             # Function to process user input and generate response
             def generate_response(user_input):
-                with st.spinner('Generating response...'):
+                with st.spinner('Post inspo incoming...'):
                     response = conversation_chain({'input': user_input, 'history': st.session_state.posts_chat_history})
                     if st.session_state.posts_chat_history == []:
                         message = {'AI': response['text']}
@@ -245,13 +247,13 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in reversed(st.session_state.posts_chat_history):
+                    for message in st.session_state.chat_history:
                         if 'human' in message:
-                           
+                            st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)  
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
+
     
     with tabs[2]:
         if 'query' in st.session_state:
@@ -295,7 +297,7 @@ AI:
 
             # Function to process user input and generate response
             def generate_response(user_input):
-                with st.spinner('Generating response...'):
+                with st.spinner('Spinning up aesthetic story ideas...'):
                     response = conversation_chain({'input': user_input, 'history': st.session_state.stories_chat_history})
                     if st.session_state.stories_chat_history == []:
                         message = {'AI': response['text']}
@@ -317,13 +319,13 @@ AI:
             with st.container():
                 chat_container = st.container()
                 with chat_container:
-                    for message in reversed(st.session_state.stories_chat_history):
+                    for message in st.session_state.chat_history:
                         if 'human' in message:
-                           
+                            st.markdown(f"<div class='message-human'>👤<br>  {message['human']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                         else:
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
+ 
 
 if __name__ == "__main__":
     main()
