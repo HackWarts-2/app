@@ -12,8 +12,8 @@ custom_css = """
     .stApp {
         background-color: #fafafa;
     }
-    .navbar {
-        background-color: #ff5733;
+     .navbar {
+        background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
         color: white;
@@ -27,6 +27,9 @@ custom_css = """
         margin-right: 1rem;
         width: 100px;
         height: 100px;
+    }
+    .stMarkdown {
+        color: #E4405F; /* Instagram red */
     }
     .profile-details {
         flex: 1;

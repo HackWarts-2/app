@@ -1,6 +1,6 @@
 from apify_client import ApifyClient
 import requests
-import json 
+import json
 import os
 from dotenv import load_dotenv
 import weaviate

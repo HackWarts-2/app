@@ -11,7 +11,7 @@ custom_css = """
         background-color: #fafafa;
     }
     .navbar {
-        background-color: #ff5733;
+        background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
         color: white;
@@ -21,16 +21,14 @@ custom_css = """
         margin-bottom: 2rem;
     }
     .profile-details-container {
-        background-color: #ffffff;
-        border-radius: 10px;
         padding: 2rem;
-        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    .stMarkdown {
+        color: #E4405F; /* Instagram red */
     }
     .post-insight {
-        background-color: #ffffff;
-        border-radius: 10px;
         padding: 1rem;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
         margin-bottom: 2rem;
     }
     .post-url {

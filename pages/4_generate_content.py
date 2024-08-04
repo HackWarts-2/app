@@ -42,7 +42,7 @@ st.markdown(
         border-radius: 5px;
         border: none;
         background: linear-gradient(45deg, #ff6a00, #ee0979, #bd10e0);
-        color: white;
+        color: ##e56969;
         cursor: pointer;
     }
     .chat-container::-webkit-scrollbar-thumb {
@@ -58,9 +58,11 @@ st.markdown(
         border-radius: 5px;
         margin-bottom: 10px;
         color: #8a49a1; /* Instagram purple */
+        color: #8a49a1; /* Instagram purple */
     }
     .message-ai {
         background-color: #c1888b;  
+        background-color: #8a49a1;  
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
@@ -68,6 +70,8 @@ st.markdown(
     }
     .stButton>button {
         background-color: ##e56969;
+     .stButton>button {
+        background-color: #e56969;  
         color: white;
         border: none;
         padding: 10px 20px;
@@ -77,12 +81,14 @@ st.markdown(
     }
     .stTextInput>div>div>input {
         border: 1px solid #c1888b;
+        border: 1px solid #c1888b;
         background-color: #F7F7F7;
         border-radius: 5px;
         padding: 10px;
         font-size: 16px;
     }
     .navbar {
+        background-color: #8a49a1;
         background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
@@ -120,6 +126,7 @@ def main():
     with tabs[0]:
         if 'query' in st.session_state:
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
 
@@ -139,9 +146,9 @@ def main():
                 template='''
 You are an Instagram content creation expert. You give descriptive ideas to create interesting and engaging reels to increase engagement on Instagram account. 
 Give reel ideas according to the description of the account which is ''' + st.session_state.query + '''.For each idea,give entire process and detailed description of what is to be done in the reel,and include a setup details where the reel should be shot. Suggest different setups for every idea.Do not suggest one setup more than twice.
-If any city or country is mentioned, add some cultural stuff in the reel ideas as well. Do not suggest to put popular hashtags, music.
-Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the work "City".Do not mention he word "Reel Idea".
-Do not mention the word "Country". Do not show your enthusiasm.Return a list of bulleted ideas of reels.Each idea should begin on separate line.
+If any city or country name is mentioned, add some cultural stuff in the reel ideas as well. Do not suggest to put popular hashtags, music.
+Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the work "City".
+Do not mention the word "Country". Do not show your enthusiasm.Return a list of bulleted ideas of reels.Each idea should begin from a separate line.Do not mention the word "Idea".
 Conversation history:
 '{history}'
 Human: '{input}'
@@ -166,7 +173,7 @@ AI:
 
             # Chat input and send button
             with st.form(key='chat_form', clear_on_submit=True):
-                user_input = st.text_input("Enter your message here", key="user_input", placeholder="Type your message...")
+                user_input = st.text_input("Enter your message here", key="user_input", placeholder=" Ask Anything.......")
                 submit_button = st.form_submit_button(label="➤")
                 if st.session_state.chat_history == []:
                     generate_response("give reel ideas!")
@@ -190,6 +197,7 @@ AI:
     
     with tabs[1]:
         if 'query' in st.session_state:
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
@@ -215,6 +223,8 @@ If any city or country is mentioned, add some cultural stuff in the post ideas a
 Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country".
  Do not show your enthusiasm.
  Return a list of bulleted ideas of posts. Each idea should begin on a separate line.
+ Do not show your enthusiasm.
+ Return a list of bulleted ideas of posts. Each idea should begin on a separate line.Do not mention the word "Idea".
 Conversation history:
 '{history}'
 Human: '{input}'
@@ -236,7 +246,7 @@ AI:
 
             # Chat input and send button
             with st.form(key='post_chat_form', clear_on_submit=True):
-                user_input = st.text_input("Enter your message here", key="posts_user_input", placeholder="Type your message...")
+                user_input = st.text_input("Enter your message here", key="posts_user_input", placeholder=" Ask Anything.......")
                 submit_button = st.form_submit_button(label="➤")
                 if st.session_state.posts_chat_history == []:
                     generate_response("give post ideas!")
@@ -250,14 +260,15 @@ AI:
                 with chat_container:
                     for message in (st.session_state.posts_chat_history):
                         if 'human' in message:
-                           
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            
                         else:
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)  
     
     with tabs[2]:
         if 'query' in st.session_state:
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
@@ -285,6 +296,9 @@ If any city or country is mentioned, add some cultural stuff in the story ideas 
 Do not suggest to put popular hashtags, music.Do not give hashtags.Do not mention the word "Story Idea".
 Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country". Do not show your enthusiasm.
 Return a list of bulleted ideas of stories only. Each idea should begin on a separate line.
+Do not suggest to put popular hashtags, music.Do not give hashtags.
+Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country". Do not show your enthusiasm.
+Return a list of bulleted ideas of stories only. Each idea should begin on a separate line.Do not mention the word "Idea".
 Conversation history:
 '{history}'
 Human: '{input}'
@@ -309,7 +323,7 @@ AI:
 
             # Chat input and send button
             with st.form(key='story_chat_form', clear_on_submit=True):
-                user_input = st.text_input("Enter your message here", key="story_user_input", placeholder="Type your message...")
+                user_input = st.text_input("Enter your message here", key="story_user_input", placeholder=" Ask Anything.......")
                 submit_button = st.form_submit_button(label="➤")
                 if st.session_state.stories_chat_history == []:
                     generate_response("give post ideas!")
@@ -323,9 +337,9 @@ AI:
                 with chat_container:
                     for message in (st.session_state.stories_chat_history):
                         if 'human' in message:
-                           
-                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                             st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
+                            
                         else:
                             st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)   
 
