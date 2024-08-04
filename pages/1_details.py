@@ -154,7 +154,7 @@ def main():
         margin-bottom: 2rem;
     }
     .stButton>button {
-        background-color: #e56969;  
+        background-color: #8a49a1;  
         color: white;
         border: none;
         padding: 10px 20px;
@@ -166,6 +166,8 @@ def main():
         background-color: grey;
         color: white;
     }
+    .sidebar-font{
+                color:black}
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         border: 1px solid #c1888b;
         background-color: #F7F7F7;
@@ -199,7 +201,13 @@ def main():
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="navbar">User Details</div>', unsafe_allow_html=True)
-
+    with st.sidebar:
+        st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
+        st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
+    st.sidebar.page_link('pages/1_details.py', label='Details')
+    st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
+    st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
+    st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     # Instagram username input (optional)
     instagram_username = st.text_input("Instagram Username (Optional)")
 
@@ -219,8 +227,6 @@ def main():
     # Account type selection
     account_type = st.selectbox("Account Type", options=account_types)
 
-    st.write("Only specify a city and/or coutry if you want results from that specific region. Not specifying will return gloabl results.")
-
     # City input (optional)
     city = st.text_input("City (Optional)")
 
@@ -229,7 +235,7 @@ def main():
 
     # Handle form submission
     if st.button("Done"):
-       with st.spinner("Fetching Profiles That Match Your Input......"):
+       with st.spinner("Fetching Profiles That Match Your Vibe..."):
         # Prepare the data for the request
         form_data = {
             "instagram_username": instagram_username,
