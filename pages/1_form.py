@@ -128,7 +128,7 @@ account_types = [
 
 def main():
     st.set_page_config(page_title="Form", page_icon=":memo:")
-    
+
     # Custom CSS for Instagram theme
     st.markdown("""
         <style>
@@ -182,7 +182,7 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    st.title("Form")
+    st.title("Details")
 
     # Instagram username input (optional)
     instagram_username = st.text_input("Instagram Username (Optional)")
@@ -210,7 +210,7 @@ def main():
     country = st.text_input("Country (Optional)")
 
     # Handle form submission
-    if st.button("Submit"):
+    if st.button("Done"):
         # Prepare the data for the request
         form_data = {
             "instagram_username": instagram_username,
@@ -224,22 +224,26 @@ def main():
 
         # Construct the query string
         query_parts = []
-        query_parts.append(category
-                           )
+        query_parts.append(category) 
+        st.session_state.category = category
         # Use the other_subcategory if specified, otherwise use the subcategory
         if other_subcategory:
             query_parts.append(other_subcategory)
+            st.session_state.sub_category = other_subcategory
         else:
             query_parts.append(subcategory)
+            st.session_state.sub_category = subcategory
 
         # Add the account type
         query_parts.append(account_type)
-
+        st.session_state.account_type = account_type
         # Add the city and/or country if specified
         if city:
             query_parts.append(city)
+            st.session_state.city = city
         if country:
             query_parts.append(country)
+            st.session_state.country = country
         
         # Join the parts into a single query string
         query_string = " ".join(query_parts)
@@ -260,7 +264,7 @@ def main():
         st.session_state['user_data_fetching'] = False
 
         print("User Data Response:", user_data_response)
-
+        st.session_state.details_entered=True
         # Navigate to the similar profiles page
         st.switch_page("pages/2_similar_profiles.py")
 
