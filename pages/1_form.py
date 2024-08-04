@@ -46,10 +46,11 @@ categories = {
         "Daily Life", "Home & Living", "Organization & Productivity", 
         "DIY & Crafts", "Sustainable Living", "Family & Parenting","Relationship Advice"
     ],
-    "Photography & Art": [
-        "Photography", "Digital Art", "Painting & Drawing", "Street Photography",
-        "Portrait Photography", "Nature Photography", "Abstract Art", "Calligraphy",
-        "Tattoo Art", "Graphic Design"
+    "Photography": [
+        "Photography",  "Street Photography",  "Portrait Photography", "Nature Photography"
+    ],
+    "Art": [
+        "Digital Art",  "Painting & Drawing",  "Abstract Art", "Calligraphy", "Tattoo Art", "Graphic Design"
     ],
     "Technology & Gadgets": [
         "Tech Reviews", "Unboxing & Product Demos", "App Reviews", "Gaming",
@@ -81,13 +82,15 @@ categories = {
         "Pet Products Reviews", "Animal Rescue", "Pet Photography", "Veterinary Advice",
         "Pet Fashion"
     ],
-    "Home & Garden": [
-        "Interior Design", "Home Renovation", "Gardening Tips", 
-        "Home Decor", "Real Estate",
-        "Outdoor Living",
+    "Home": [
+        "Interior Design", 
+        "Home Renovation", 
+        "Home Decor", 
+        "Real Estate"
     ],
-   "Religion": [
-        "Christian Influencer", "Muslim Influencer", "Jewish Influencer"
+    "Garden": [
+        "Gardening Tips", 
+        "Outdoor Living"
     ],
     "Environmental & Social Issues": [
         "Environmental Activism", "Climate Change Awareness", 
