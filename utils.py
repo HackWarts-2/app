@@ -14,12 +14,12 @@ import streamlit as st
 
 
 #load_dotenv()
-ai71_api_key = st.secrets('AI71_TOKEN')
-apify_api_key = st.secrets('APIFY_TOKEN')
-google_api_key = st.secrets('GOOGLE_TOKEN')
-search_engine_id = st.secrets('SEARCH_ENGINE_ID')
-WEAVIATE_URL = st.secrets('WEAVIATE_URL')
-WEAVIATE_API_KEY = st.secrets('WEAVIATE_API_KEY')
+ai71_api_key = st.secrets['AI71_TOKEN']
+apify_api_key = st.secrets['APIFY_TOKEN']
+google_api_key = st.secrets['GOOGLE_TOKEN']
+search_engine_id = st.secrets['SEARCH_ENGINE_ID']
+WEAVIATE_URL = st.secrets['WEAVIATE_URL']
+WEAVIATE_API_KEY = st.secrets['WEAVIATE_API_KEY']
 
 # apify_api_key = os.getenv('APIFY_TOKEN')
 # ai71_api_key = os.getenv('AI71_TOKEN')

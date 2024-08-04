@@ -181,7 +181,7 @@ if 'category' in st.session_state:
         '''
     )
 
-    ai71_api_key = st.secrets('AI71_TOKEN')
+    ai71_api_key = st.secrets['AI71_TOKEN']
 
     #ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
