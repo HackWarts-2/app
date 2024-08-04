@@ -95,7 +95,7 @@ categories = {
     "Environmental & Social Issues": [
         "Environmental Activism", "Climate Change Awareness", 
         "Human Rights Advocacy", "Social Justice", "Animal Rights", "Gender Equality",
-       "Non-Profit Organizations"
+    "Non-Profit Organizations"
     ],
     "Gaming": [
         "Game Reviews", "Esports", "Live Streaming", "Gaming News", "Game Development",
@@ -265,10 +265,10 @@ def main():
         print("Generated Query:", query_string)
         query_string = remove_none_string(query_string)
         # Call the scrape_instagram_similar_profiles function
-       # similar_profiles_data = scrape_instagram_similar_profiles(query_string)
+        similar_profiles_data = scrape_instagram_similar_profiles(query_string)
         st.session_state['query'] = query_string
         # Save the similar_profiles_data to session state
-       # st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)
+        st.session_state['similar_profiles_data'] = json.loads(similar_profiles_data)
 
         # Set the user_data_fetching flag to True
         st.session_state['user_data_fetching'] = True
