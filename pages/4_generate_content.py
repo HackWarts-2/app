@@ -10,6 +10,16 @@ st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
 st.markdown(
     """
     <style>
+    .navbar {
+        background-color: #8a49a1;
+        padding: 1rem;
+        text-align: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
     .chat-container {
         display: flex;
         flex-direction: column;
@@ -43,7 +53,7 @@ st.markdown(
         border-radius: 5px;
         border: none;
         background: linear-gradient(45deg, #ff6a00, #ee0979, #bd10e0);
-        color: ##e56969;
+        color: ##c1558b;
         cursor: pointer;
     }
     .chat-container::-webkit-scrollbar-thumb {
@@ -70,9 +80,9 @@ st.markdown(
         color: white;
     }
     .stButton>button {
-        background-color: ##e56969;
+        background-color: #c1558b;
      .stButton>button {
-        background-color: #e56969;  
+        background-color: #c1558b;  
         color: white;
         border: none;
         padding: 10px 20px;
@@ -88,33 +98,32 @@ st.markdown(
         padding: 10px;
         font-size: 16px;
     }
-    .navbar {
-        background-color: #8a49a1;
-        background-color: #8a49a1;
-        padding: 1rem;
-        text-align: center;
-        color: white;
-        font-size: 1.5rem;
-        font-weight: bold;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-    }
+    
     .stTitle, .stHeader, .stSubheader {
         color: #405DE6; /* Instagram blue */
     }
     .stMarkdown {
         color: #E4405F; /* Instagram red */
     }
+    .sidebar-font{
+                color:black}
     </style>
     """,
     unsafe_allow_html=True,
 )
 def main():
-    st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
-
+    st.markdown('<div class="navbar">Cure Your Content Drought🤖 💬.</div>', unsafe_allow_html=True)
+    st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+    with st.sidebar:
+        st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
+        st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
+    st.sidebar.page_link('pages/1_details.py', label='Details')
+    st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
+    st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
+    st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     tabs = st.tabs(["Reels", "Posts", "Stories"])
     ai71_api_key = st.secrets['AI71_TOKEN']
-    #ai71_api_key = os.getenv('AI71_TOKEN')
+    # ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 
@@ -127,8 +136,8 @@ def main():
             )
     with tabs[0]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            
+            
             
             memory = ConversationBufferMemory()
 
@@ -199,8 +208,8 @@ AI:
     
     with tabs[1]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+           
+            
             
             memory = ConversationBufferMemory()
 
@@ -270,8 +279,8 @@ AI:
     
     with tabs[2]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            
+            
             
             memory = ConversationBufferMemory()
 
