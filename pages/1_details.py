@@ -228,7 +228,7 @@ def main():
 
     # Handle form submission
     if st.button("Done"):
-       with st.spinner("Fetching Profiles That Match Your Input......"):
+       with st.spinner("Fetching Profiles That Match Your Vibe..."):
         # Prepare the data for the request
         form_data = {
             "instagram_username": instagram_username,

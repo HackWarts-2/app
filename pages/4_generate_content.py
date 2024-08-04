@@ -112,7 +112,8 @@ def main():
     st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
 
     tabs = st.tabs(["Reels", "Posts", "Stories"])
-    ai71_api_key = os.getenv('AI71_TOKEN')
+    ai71_api_key = st.secrets['AI71_TOKEN']
+    #ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 
@@ -126,7 +127,7 @@ def main():
     with tabs[0]:
         if 'query' in st.session_state:
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            
             
             memory = ConversationBufferMemory()
 
@@ -198,7 +199,7 @@ AI:
     with tabs[1]:
         if 'query' in st.session_state:
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            
             
             memory = ConversationBufferMemory()
 
@@ -269,7 +270,7 @@ AI:
     with tabs[2]:
         if 'query' in st.session_state:
             st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+            
             
             memory = ConversationBufferMemory()
 
