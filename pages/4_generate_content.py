@@ -57,17 +57,17 @@ st.markdown(
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
-        color: #8A3AB9; /* Instagram purple */
+        color: #8a49a1; /* Instagram purple */
     }
     .message-ai {
-        background-color: #E1306C; /* Instagram pink */
+        background-color: #c1888b;  
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
         color: white;
     }
     .stButton>button {
-        background-color: #E1306C; /* Instagram pink */
+        background-color: ##e56969;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -76,14 +76,14 @@ st.markdown(
         cursor: pointer;
     }
     .stTextInput>div>div>input {
-        border: 1px solid #E1306C; /* Instagram pink */
+        border: 1px solid #c1888b;
         background-color: #F7F7F7;
         border-radius: 5px;
         padding: 10px;
         font-size: 16px;
     }
     .navbar {
-        background-color: #ff5733;
+        background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
         color: white;
@@ -119,7 +119,7 @@ def main():
             )
     with tabs[0]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!🪄🪄")
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
 
@@ -190,7 +190,7 @@ AI:
     
     with tabs[1]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!🪄🪄")
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
 
@@ -213,7 +213,8 @@ Give post ideas according to the description of the account.Description of the a
 For each post idea,  show how the picture is to be taken, and include potential setups or location spots. Donot suggest one location spot more than twice.
 If any city or country is mentioned, add some cultural stuff in the post ideas as well.Do not add the words "Cultural Stuff". Also give captions to put under the posts.Do not suggest to put popular hashtags, music.Do not give hashtags.
 Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country".
- Do not show your enthusiasm.Return a list of bulleted ideas of posts. Each idea should begin on a separate line.
+ Do not show your enthusiasm.
+ Return a list of bulleted ideas of posts. Each idea should begin on a separate line.
 Conversation history:
 '{history}'
 Human: '{input}'
@@ -257,7 +258,7 @@ AI:
     
     with tabs[2]:
         if 'query' in st.session_state:
-            st.header("Out of post ideas? We've got you covered with endless inspiration!🪄🪄")
+            st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
             
             memory = ConversationBufferMemory()
 
@@ -282,7 +283,8 @@ Return the results in a timeline based story posting suggestion. For each idea, 
 and displayed and include any potential location spots or setups.
 If any city or country is mentioned, add some cultural stuff in the story ideas as well. Suggest captions to put on the stories.
 Do not suggest to put popular hashtags, music.Do not give hashtags.Do not mention the word "Story Idea".
-Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country". Do not show your enthusiasm.Return a list of bulleted ideas of stories. Each idea should begin on a separate line.
+Do not greet the user. Do not say Thank you.Do not mention the statement "''' + st.session_state.query + '''".Do not mention the word "City".Do not mention the word "Country". Do not show your enthusiasm.
+Return a list of bulleted ideas of stories only. Each idea should begin on a separate line.
 Conversation history:
 '{history}'
 Human: '{input}'

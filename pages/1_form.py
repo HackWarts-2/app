@@ -14,6 +14,9 @@ if 'user_data_response' not in st.session_state:
 if 'user_data_fetching' not in st.session_state:
     st.session_state['user_data_fetching'] = False
 
+if 'category' not in st.session_state:
+    st.session_state['category'] = None
+
 def remove_none_string(query):
     if "None" in query:
         return query.replace("None", "")
@@ -225,7 +228,7 @@ def main():
         # Construct the query string
         query_parts = []
         query_parts.append(category) 
-        st.session_state.category = category
+        st.session_state['category'] = category
         # Use the other_subcategory if specified, otherwise use the subcategory
         if other_subcategory:
             query_parts.append(other_subcategory)

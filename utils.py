@@ -3,6 +3,14 @@ import requests
 import json 
 import os
 from dotenv import load_dotenv
+import weaviate
+from weaviate.classes.init import Auth
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
+from weaviate.classes.query import MetadataQuery
+from weaviate.classes.query import Filter
+from weaviate.classes.config import Configure, Property, DataType, Tokenization
+import weaviate.classes as wvc
+
 
 load_dotenv()
 
@@ -10,6 +18,8 @@ apify_api_key = os.getenv('APIFY_TOKEN')
 ai71_api_key = os.getenv('AI71_TOKEN')
 google_api_key = os.getenv('GOOGLE_TOKEN')
 search_engine_id = os.getenv('SEARCH_ENGINE_ID')
+WEAVIATE_URL = os.getenv('WEAVIATE_URL')
+WEAVIATE_API_KEY = os.getenv('WEAVIATE_API_KEY')
 
 def userData(username):
   # Initialize the ApifyClient with your API token
@@ -340,3 +350,44 @@ def scrape_instagram_similar_profiles(query):
   data_sorted = sorted(data, key=lambda x: x['followersCount'], reverse=True)
   #print(json.dumps(data_sorted))
   return json.dumps(data_sorted)    
+
+def convert_text_to_embeddings(input_text):
+    """
+    Converts an input string to vector embeddings.
+
+    Args:
+        input_text (str): The input string to convert.
+
+    Returns:
+        list of floats: The vector embeddings for the input text.
+    """
+    # Initialize the Hugging Face Embedding class
+    embeddings_model = HuggingFaceEmbeddings()
+
+    # Generate embeddings for the input text
+    vector_embeddings = embeddings_model.embed_query(input_text)
+
+    return vector_embeddings
+
+def vector_search(query, collection):
+  # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=WEAVIATE_URL,
+        auth_credentials=Auth.api_key(WEAVIATE_API_KEY),
+    )
+
+    collection = client.collections.get(collection)
+
+    query_vector = convert_text_to_embeddings(query)
+
+    response = collection.query.near_vector(
+        near_vector=query_vector,
+        limit=5,
+        return_metadata=MetadataQuery(distance=True)
+    )
+    result = []
+    for o in response.objects:
+        print(o.properties)
+        result.append(o.properties)
+        print(o.metadata.distance)
+    return result

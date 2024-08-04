@@ -25,13 +25,15 @@ def main():
     """
 
     st.markdown(sidebar_style, unsafe_allow_html=True)
+
+    st.title("AppName")
+    st.write("Enhance your Instagram profile with detailed, personalized analysis.")
     
     with st.sidebar:
         st.markdown("<div class='sidebar-content'><h2>AppName</h2>", unsafe_allow_html=True)
         st.markdown("<p>Enhance your Instagram profile with detailed, personalized analysis.</p></div>", unsafe_allow_html=True)
 
-    st.title("AppName")
-    st.write("Enhance your Instagram profile with detailed, personalized analysis.")
+    
     
 if __name__ == "__main__":
     main()
