@@ -205,9 +205,9 @@ if 'category' in st.session_state:
                     st.session_state['data_ingested'] = False
                     st.error("This username isn't valid - please enter a valid username.")
                     st.error(f"Error details: {e}")
-        else:
-            if st.session_state.get('data_ingested', False):
-                st.success("Data already ingested! Go ahead and start chatting about this user.")
+        # else:
+        #     if st.session_state.get('data_ingested', False):
+        #         st.success("Data already ingested! Go ahead and start chatting about this user.")
 
 
     if collection_name:
