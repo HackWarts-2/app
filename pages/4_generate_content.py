@@ -124,8 +124,8 @@ def main():
     st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     tabs = st.tabs(["Reels", "Posts", "Stories"])
-    #ai71_api_key = st.secrets['AI71_TOKEN']
-    ai71_api_key = os.getenv('AI71_TOKEN')
+    ai71_api_key = st.secrets['AI71_TOKEN']
+    #ai71_api_key = os.getenv('AI71_TOKEN')
     AI71_BASE_URL = "https://api.ai71.ai/v1/"
     AI71_API_KEY = ai71_api_key
 

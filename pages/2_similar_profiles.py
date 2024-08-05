@@ -60,7 +60,7 @@ def format_number(number):
     """Format a number with commas as thousands separators."""
     return f"{number:,}"
 
-from app.utils import getInsightsForProfile
+from utils import getInsightsForProfile
 
 # Initialize the session state keys if they do not exist
 if 'user_data_response' not in st.session_state:
@@ -107,7 +107,7 @@ def main():
                 st.markdown(f'<p><a href="{profile["inputUrl"]}" class="visit-profile" target="_blank">Visit Profile</a></p>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
-             
+           
             # Get Insights button
             if st.button(f"Get Insights for {profile['username']}", key=profile['username']):
                 if st.session_state['user_data_response']:
@@ -127,7 +127,7 @@ def main():
                     st.error("Failed to fetch user data.")
             if st.button(f"Ask anything from {profile['username']}", key=f"chat{profile['username']}"):
                 st.session_state['selected_username']=profile['username']
-                st.switch_page("pages/UserSpecificBot.py")      
+                st.switch_page("pages/7_UserSpecificBot.py")      
             st.write("---")
     else:
         st.write("No similar profiles found. Please go back and try again.")

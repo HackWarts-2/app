@@ -74,8 +74,7 @@ def main():
     st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
     st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
-
-   
+    
     if st.button("Get Started"):
         st.switch_page("pages/1_details.py")
 if __name__ == "__main__":

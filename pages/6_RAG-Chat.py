@@ -1,22 +1,14 @@
 import os
 from langchain_community.chat_models import ChatOpenAI
-from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts.prompt import PromptTemplate
 from langchain.chains import LLMChain
 import openai
 import streamlit as st
 import streamlit.components.v1 as components
-from app.utils import vector_search, vector_search_filtered, ingest_user_data
+from utils import vector_search, vector_search_filtered, ingest_user_data
 
-st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
-
-def create_instagram_profile_url(username):
-    base_url = "https://www.instagram.com/"
-    profile_url = f"{base_url}{username}/"
-    print(f"Profile URL: {profile_url}")
-    return profile_url
-st.set_page_config(page_title="Generate Content", page_icon=":bulb:")
+st.set_page_config(page_title="Ask Me")
 
 def create_instagram_profile_url(username):
     base_url = "https://www.instagram.com/"
@@ -53,42 +45,6 @@ st.markdown(
         border-radius: 5px;
         border: 1px solid #ccc;
     }
-    .category-input, .username-input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border: 2px solid #E1306C;
-        background-color: #F7F7F7;
-        font-size: 16px;
-    }
-    .category-submit, .username-submit {
-        padding: 8px 16px;
-        border-radius: 4px;
-        border: none;
-        background: linear-gradient(45deg, #ff6a00, #ee0979, #bd10e0);
-        color: white;
-        cursor: pointer;
-        margin-bottom: 20px;
-    }
-    .category-input, .username-input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border: 2px solid #E1306C;
-        background-color: #F7F7F7;
-        font-size: 16px;
-    }
-    .category-submit, .username-submit {
-        padding: 8px 16px;
-        border-radius: 4px;
-        border: none;
-        background: linear-gradient(45deg, #ff6a00, #ee0979, #bd10e0);
-        color: white;
-        cursor: pointer;
-        margin-bottom: 20px;
-    }
     .send-button {
         padding: 10px 20px;
         border-radius: 5px;
@@ -112,21 +68,25 @@ st.markdown(
         color: #8A3AB9; /* Instagram purple */
     }
     .message-ai {
-        background-color: #E1306C; /* Instagram pink */
-        background-color: #E1306C; /* Instagram pink */
+        background-color: #8a49a1; /* Instagram pink */
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 10px;
         color: white;
     }
-    .stButton>button {
-        background-color: #E1306C; /* Instagram pink */
+  
+     .stButton>button {
+        background-color:  #c1558b;  
         color: white;
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
+    }
+    .stButton>button:active {
+        background-color:  #c1558b;
+        color: white;
     }
     .stTextInput>div>div>input {
         border: 1px solid #E1306C; /* Instagram pink */
@@ -135,10 +95,10 @@ st.markdown(
         padding: 10px;
         font-size: 16px;
     }
-      .navbar {
-        background-color: #ff5733;
-      .navbar {
-        background-color: #ff5733;
+    .sidebar-font{
+    color:black}
+    .navbar {
+        background-color: #8a49a1;
         padding: 1rem;
         text-align: center;
         color: white;
@@ -159,12 +119,15 @@ st.markdown(
 )
 
 
-st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
-st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
-
-
-st.markdown('<div class="navbar">Cure Your Content Drought</div>', unsafe_allow_html=True)
-st.header("Out of post ideas? We've got you covered with endless inspiration!✨💫")
+st.markdown('<div class="navbar">Ask Me🤖 💬.</div>', unsafe_allow_html=True)
+st.header("Explore trends, deals, and events, or dive into specific profiles by providing a username.👤Engage with our bot, ask questions, and discover what's trending in the Instagram world!📱💬")
+with st.sidebar:
+    st.markdown("<div class='sidebar-content'><h2>INSTArget🎯</h2>", unsafe_allow_html=True)
+    st.markdown("<p class='sidebar-font'>Boost your Instagram game with tailored, fun analysis and insights.</p></div>", unsafe_allow_html=True)
+    st.sidebar.page_link('pages/1_details.py', label='Details')
+    st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
+    st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
+    st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
 
 # Define the categories
 categories = [
@@ -179,17 +142,13 @@ categories = [
 if 'profile_url' not in st.session_state:
     st.session_state.profile_url = None
 
-# Ensure that profile_url is stored in session state
-if 'profile_url' not in st.session_state:
-    st.session_state.profile_url = None
-
 # Form to select category and optionally input username
 if 'category' not in st.session_state:
+    
     with st.form(key='user_input_form'):
+        st.write("datataa")
         selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
-        selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
+        form_submit = st.form_submit_button(label="Submit", use_container_width=False)
 
         if form_submit:
             st.session_state['category'] = selected_category  # Save category to session state
@@ -222,56 +181,36 @@ if 'category' in st.session_state:
 
     with st.form(key='user_input_form_two'):
         username = st.text_input("Instagram Username (Optional - only enter this if you only want results from a specific profile)", key="username_input", help="Enter the Instagram username you want to search for. Make sure it is a valid username. Data of that profile will be ingested into the vector database and used for grounded answers to your questions.")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
-
+        
+        form_submit = st.form_submit_button(label="Submit", use_container_width=False)
+      
         if form_submit:
             st.session_state['username'] = username  # Optionally save username to session state
             st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
             st.session_state['data_ingested'] = False  # Initialize the flag to False
 
-
-    if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
-        print(f"Using Instagram username {st.session_state['username']} for search.")
-        st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-        print(st.session_state.profile_url)
-        # Attempt to ingest data for the username
-        try:
-            st.write("Ingesting this user's data into the vector database - please hold a minute or two...")
-            ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
-            st.session_state['data_ingested'] = True  # Set the flag to True after successful ingestion
-            st.success("Data ingested successfully! Go ahead and start chatting about this user.")
-        except Exception as e:
-            st.error("This username isn't valid - please enter a valid username.")
-            st.error(f"Error details: {e}")
-
-
-    with st.form(key='user_input_form_two'):
-        username = st.text_input("Instagram Username (Optional - only enter this if you only want results from a specific profile)", key="username_input", help="Enter the Instagram username you want to search for. Make sure it is a valid username. Data of that profile will be ingested into the vector database and used for grounded answers to your questions.")
-        form_submit = st.form_submit_button(label="Submit", use_container_width=True)
-
-        if form_submit:
-            st.session_state['username'] = username  # Optionally save username to session state
+        if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
+            print(f"Using Instagram username {st.session_state['username']} for search.")
             st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-            st.session_state['data_ingested'] = False  # Initialize the flag to False
+            print(st.session_state.profile_url)
 
-
-    if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
-        print(f"Using Instagram username {st.session_state['username']} for search.")
-        st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-        print(st.session_state.profile_url)
-        # Attempt to ingest data for the username
-        try:
-            st.write("Ingesting this user's data into the vector database - please hold a minute or two...")
-            ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
-            st.session_state['data_ingested'] = True  # Set the flag to True after successful ingestion
-            st.success("Data ingested successfully! Go ahead and start chatting about this user.")
-        except Exception as e:
-            st.error("This username isn't valid - please enter a valid username.")
-            st.error(f"Error details: {e}")
+    # Attempt to ingest data for the username
+            with st.spinner("Fetching this users data - please hold a minute or two..."):
+                try:
+                    ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
+                    st.session_state['data_ingested'] = True  # Set the flag to True after successful ingestion
+                    st.success("Data ingested successfully! Go ahead and start chatting about this user.")
+                except Exception as e:
+                    st.session_state['data_ingested'] = False
+                    st.error("This username isn't valid - please enter a valid username.")
+                    st.error(f"Error details: {e}")
+        else:
+            if st.session_state.get('data_ingested', False):
+                st.success("Data already ingested! Go ahead and start chatting about this user.")
 
 
     if collection_name:
-        st.write(f"Using collection: {collection_name}")
+        print(f"Using collection: {collection_name}")
     else:
         st.error("Selected category does not have a corresponding collection in the database.")
 
@@ -329,28 +268,19 @@ if 'category' in st.session_state:
         def extract_references(search_results):
             references = []
             embed_urls = []
-            embed_urls = []
             for i, result in enumerate(search_results):
                 post_url = result.get('postURL', '')
                 profile_url = result.get('profileURL', '')
                 reference = f"Reference {i+1}:"
                 if post_url:
                     embed_urls.append(post_url)
-                    embed_urls.append(post_url)
                 if profile_url:
                     reference += f"\n- Profile URL: [{profile_url}]({profile_url})"
                 if reference != f"Reference {i+1}:":  # Ensure there is content to show
                     references.append(reference)
             return "\n\n".join(references), embed_urls
-            return "\n\n".join(references), embed_urls
 
         # Perform vector search based on user input and collection name
-        if st.session_state.get('profile_url') and st.session_state.get('data_ingested', False):
-            print("Profile URL is set and data is ingested")
-            search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
-        else:
-            search_results = vector_search(user_input, collection_name)
-        #print(search_results)
         if st.session_state.get('profile_url') and st.session_state.get('data_ingested', False):
             print("Profile URL is set and data is ingested")
             search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
@@ -364,14 +294,9 @@ if 'category' in st.session_state:
         # Extract references from search results
         references, embed_urls = extract_references(search_results)
         #print(references)
-        references, embed_urls = extract_references(search_results)
-        #print(references)
 
         # Prepare input for the model
         augmented_input = f"User: {user_input}. Retrieved context: {combined_content}"
-
-        if len(augmented_input) > 3500:
-            augmented_input = augmented_input[:3500]
 
         if len(augmented_input) > 3500:
             augmented_input = augmented_input[:3500]
@@ -391,18 +316,14 @@ if 'category' in st.session_state:
             for url in embed_urls:
                 components.iframe(f"{url}embed", height=400, width=300)
 
-        # Display the post embeds in an expander
-        with st.expander("View Reference Posts"):
-            for url in embed_urls:
-                components.iframe(f"{url}embed", height=400, width=300)
-
     # Chat input and send button
     with st.form(key='chat_form', clear_on_submit=True):
         user_input = st.text_input("Enter your message here", key="user_input", placeholder="Type your message...")
         submit_button = st.form_submit_button(label="➤")
         
         if submit_button and user_input:
-            generate_response(user_input)
+            with st.spinner("Generating response..."):
+                generate_response(user_input)
 
     # Display the conversation with emojis
     with st.container():
@@ -410,11 +331,7 @@ if 'category' in st.session_state:
         with chat_container:
             for message in reversed(st.session_state.conversation_history):
                 if 'human' in message:                           
-            for message in reversed(st.session_state.conversation_history):
-                if 'human' in message:                           
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True)
                     st.markdown(f"<div class='message-human'>👤<br> {message['human']}</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True) 
-
                     st.markdown(f"<div class='message-ai'>🤖<br> {message['AI']}</div>", unsafe_allow_html=True) 

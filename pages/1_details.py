@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import json
-from app.utils import scrape_instagram_similar_profiles, userData
+from utils import scrape_instagram_similar_profiles, userData
 
 # Initialize the session state keys if they do not exist
 if 'similar_profiles_data' not in st.session_state:
@@ -208,6 +208,7 @@ def main():
     st.sidebar.page_link('pages/2_similar_profiles.py', label='Similar Profiles')
     st.sidebar.page_link('pages/4_generate_content.py', label='Create Content')
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
+    
     # Instagram username input (optional)
     instagram_username = st.text_input("Instagram Username (Optional)")
 
