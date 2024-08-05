@@ -10,6 +10,8 @@ from utils import vector_search, vector_search_filtered, ingest_user_data
 
 st.set_page_config(page_title="Ask Me")
 
+st.session_state['profile_url'] = None
+
 def create_instagram_profile_url(username):
     base_url = "https://www.instagram.com/"
     profile_url = f"{base_url}{username}/"
@@ -146,7 +148,6 @@ if 'profile_url' not in st.session_state:
 if 'category' not in st.session_state:
     
     with st.form(key='user_input_form'):
-        st.write("datataa")
         selected_category = st.selectbox("Select a Category", options=categories, key="category_select")
         form_submit = st.form_submit_button(label="Submit", use_container_width=False)
 
