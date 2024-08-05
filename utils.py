@@ -21,12 +21,12 @@ search_engine_id = st.secrets['SEARCH_ENGINE_ID']
 WEAVIATE_URL = st.secrets['WEAVIATE_URL']
 WEAVIATE_API_KEY = st.secrets['WEAVIATE_API_KEY']
 
-apify_api_key = os.getenv('APIFY_TOKEN')
-ai71_api_key = os.getenv('AI71_TOKEN')
-google_api_key = os.getenv('GOOGLE_TOKEN')
-search_engine_id = os.getenv('SEARCH_ENGINE_ID')
-WEAVIATE_URL = os.getenv('WEAVIATE_URL')
-WEAVIATE_API_KEY = os.getenv('WEAVIATE_API_KEY')
+# apify_api_key = os.getenv('APIFY_TOKEN')
+# ai71_api_key = os.getenv('AI71_TOKEN')
+# google_api_key = os.getenv('GOOGLE_TOKEN')
+# search_engine_id = os.getenv('SEARCH_ENGINE_ID')
+# WEAVIATE_URL = os.getenv('WEAVIATE_URL')
+# WEAVIATE_API_KEY = os.getenv('WEAVIATE_API_KEY')
 
 def userData(username):
   # Initialize the ApifyClient with your API token
