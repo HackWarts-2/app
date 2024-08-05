@@ -10,7 +10,9 @@ from utils import vector_search, vector_search_filtered, ingest_user_data
 
 st.set_page_config(page_title="Ask Me")
 
-st.session_state['profile_url'] = None
+if 'profile_url_page1' not in st.session_state:
+    st.session_state.profile_url_page1 = None
+
 
 def create_instagram_profile_url(username):
     base_url = "https://www.instagram.com/"
@@ -186,14 +188,17 @@ if 'category' in st.session_state:
         form_submit = st.form_submit_button(label="Submit", use_container_width=False)
       
         if form_submit:
-            st.session_state['username'] = username  # Optionally save username to session state
-            st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
+            st.session_state['username'] = username  # Save username to session state
+            st.session_state.profile_url_page1 = create_instagram_profile_url(st.session_state['username'])
             st.session_state['data_ingested'] = False  # Initialize the flag to False
 
+        # Ensure the profile_url_page1 is correctly set after submission
         if 'username' in st.session_state and st.session_state['username'] and not st.session_state.get('data_ingested', False):
+            if not st.session_state.profile_url_page1:
+                st.session_state.profile_url_page1 = create_instagram_profile_url(st.session_state['username'])
             print(f"Using Instagram username {st.session_state['username']} for search.")
-            st.session_state.profile_url = create_instagram_profile_url(st.session_state['username'])
-            print(st.session_state.profile_url)
+            print(st.session_state.profile_url_page1)
+
 
     # Attempt to ingest data for the username
             with st.spinner("Fetching this users data - please hold a minute or two..."):
@@ -283,7 +288,7 @@ if 'category' in st.session_state:
             return "\n\n".join(references), embed_urls
 
         # Perform vector search based on user input and collection name
-        if st.session_state.get('data_ingested'):
+        if st.session_state.get('data_ingested') and st.session_state.profile_url_page1:
             print("Profile URL is set and data is ingested")
             search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
         else:
