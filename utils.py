@@ -2,7 +2,7 @@ from apify_client import ApifyClient
 import requests
 import json
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import weaviate
 from weaviate.classes.init import Auth
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
