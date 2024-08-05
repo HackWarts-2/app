@@ -143,8 +143,8 @@ categories = [
 ]
 
 # Ensure that profile_url is stored in session state
-if 'profile_url' not in st.session_state:
-    st.session_state.profile_url = None
+if 'profile_url_page1' not in st.session_state:
+    st.session_state.profile_url_page1 = None
 
 # Form to select category and optionally input username
 if 'category' not in st.session_state:
@@ -203,7 +203,7 @@ if 'category' in st.session_state:
     # Attempt to ingest data for the username
             with st.spinner("Fetching this users data - please hold a minute or two..."):
                 try:
-                    ingest_user_data(user=st.session_state.profile_url, collection=collection_name)  # Pass category and collection
+                    ingest_user_data(user=st.session_state.profile_url_page1, collection=collection_name)  # Pass category and collection
                     st.session_state['data_ingested'] = True  # Set the flag to True after successful ingestion
                     st.success("Data ingested successfully! Go ahead and start chatting about this user.")
                 except Exception as e:
@@ -217,7 +217,7 @@ if 'category' in st.session_state:
 
     if collection_name:
         print(f"Using collection: {collection_name}")
-        print(f"Using url: {st.session_state.profile_url}")
+        print(f"Using url: {st.session_state.profile_url_page1}")
     else:
         st.error("Selected category does not have a corresponding collection in the database.")
 
@@ -290,7 +290,7 @@ if 'category' in st.session_state:
         # Perform vector search based on user input and collection name
         if st.session_state.get('data_ingested') and st.session_state.profile_url_page1:
             print("Profile URL is set and data is ingested")
-            search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
+            search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url_page1)
         else:
             search_results = vector_search(user_input, collection_name)
         #print(search_results)
