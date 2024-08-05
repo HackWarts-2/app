@@ -212,6 +212,7 @@ if 'category' in st.session_state:
 
     if collection_name:
         print(f"Using collection: {collection_name}")
+        print(f"Using url: {st.session_state.profile_url}")
     else:
         st.error("Selected category does not have a corresponding collection in the database.")
 
