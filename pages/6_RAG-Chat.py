@@ -282,7 +282,7 @@ if 'category' in st.session_state:
             return "\n\n".join(references), embed_urls
 
         # Perform vector search based on user input and collection name
-        if st.session_state.get('profile_url') and st.session_state.get('data_ingested', False):
+        if st.session_state.get('data_ingested'):
             print("Profile URL is set and data is ingested")
             search_results = vector_search_filtered(user_input, collection_name, st.session_state.profile_url)
         else:
