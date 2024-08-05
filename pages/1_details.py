@@ -233,6 +233,7 @@ def main():
 
     # Country input (optional)
     country = st.text_input("Country (Optional)")
+    
 
     # Handle form submission
     if st.button("Done"):
