@@ -210,7 +210,7 @@ def main():
     st.sidebar.page_link('pages/6_RAG-Chat.py', label='Ask Me')
     
     # Instagram username input (optional)
-    instagram_username = st.text_input("Instagram Username (Optional)")
+    instagram_username = st.text_input("Instagram Username (Optional)", help="Enter your Instagram username for more personalised results. However, you may leave it blank if you don't want to add your username.")
 
     # Category selection
     category = st.selectbox("Category", options=list(categories.keys()))
@@ -228,6 +228,9 @@ def main():
     # Account type selection
     account_type = st.selectbox("Account Type", options=account_types)
 
+    
+    st.write("Only fill in the following fields if you want to narrow down the search results to you rspecific region. Not specifying these fields will give you globalh results.")
+    
     # City input (optional)
     city = st.text_input("City (Optional)")
 
