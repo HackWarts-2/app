@@ -10,6 +10,8 @@ from utils import vector_search, vector_search_filtered, ingest_user_data
 
 st.set_page_config(page_title="Ask Me")
 
+print(st.session_state['category'])
+
 def create_instagram_profile_url(username):
     base_url = "https://www.instagram.com/"
     profile_url = f"{base_url}{username}/"
@@ -154,7 +156,8 @@ if 'profile_url' not in st.session_state:
 #             st.session_state['category'] = selected_category  # Save category to session state
 
 # # Only load chat functionality if the category is set
-if 'category' in st.session_state:
+if 'category' in st.session_state: 
+    print("Category is set" + st.session_state['category']) 
     collection_name = {
         "Beauty & Skincare": "Beauty",
         "Food & Drink": "Food",
