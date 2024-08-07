@@ -1,5 +1,5 @@
 # INTARGET🎯
-INSTArger helps instagram businesses and content creators analyse and get insights about their competitors’ data and learn how to use similar strategies in order to improve their own business/profile.
+INSTArget helps instagram businesses and content creators analyse and get insights about their competitors’ data and learn how to use similar strategies in order to improve their own business/profile.
 ## Features
   ### Competitor Analysis
   - Insights on strategies by those similar profiles on 5 latest posts
